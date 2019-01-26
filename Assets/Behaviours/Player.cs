@@ -37,7 +37,7 @@ public class Player : MonoBehaviour
 
     private int nextSizeOfObjectToPick;
     private Animator animator;
-    private Rigidbody rb;
+    private CharacterController cc;
     private GameObject handSocket;
     private GameObject grabSocket;
     private bool isInsideParking;
@@ -45,7 +45,7 @@ public class Player : MonoBehaviour
 
     void Start()
     {
-        rb = GetComponent<Rigidbody>();
+        cc = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
         handSocket = gameObject.transform.FindDeepChild("HandSocket").gameObject;
         grabSocket = gameObject.transform.FindDeepChild("GrabSocket").gameObject;
@@ -54,6 +54,29 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
+        float axisX = Input.GetAxis("Horizontal" + playerId.ToString());
+        float axisZ = Input.GetAxis("Vertical" + playerId.ToString());
+
+        Vector3 velocity = Vector3.zero;
+        if (CanWalk())
+        {
+            Vector3 axisVector = new Vector3(axisX, 0, axisZ);
+            if (axisVector.magnitude > 0)
+            {
+                Vector3 velocityDir = axisVector.normalized;
+                transform.rotation = Quaternion.Slerp(Quaternion.LookRotation(transform.forward),
+                                                      Quaternion.LookRotation(velocityDir),
+                                                      rotSpeed * Time.deltaTime);
+
+                float baseSpeedFactored = baseSpeed * GetWeightSpeedFactor();
+                velocity = (transform.forward * baseSpeedFactored);
+                velocity *= speedVsDotCurve.Evaluate(Vector3.Dot(transform.forward, velocityDir));
+            }
+        }
+
+        cc.SimpleMove(new Vector3(velocity.x, cc.velocity.y, velocity.z));
+        animator.SetFloat("Velocity", Planar(velocity).magnitude / baseSpeed);
+
         bool justGrabbed = false;
 
         List<GrabbableObject> grabbableObjects = new List<GrabbableObject>(FindObjectsOfType<GrabbableObject>());
@@ -144,32 +167,22 @@ public class Player : MonoBehaviour
         return canWalk;
     }
 
-    void FixedUpdate()
+    private static Vector3 Planar(Vector3 v)
     {
-        float axisX = Input.GetAxis("Horizontal" + playerId.ToString());
-        float axisZ = Input.GetAxis("Vertical" + playerId.ToString());
-        
-        if (CanWalk())
+        return new Vector3(v.x, 0, v.z);
+    }
+    private static Vector3 PlanarNorm(Vector3 v)
+    {
+        return Planar(v).normalized;
+    }
+    
+    float GetWeightSpeedFactor()
+    {
+        if (grabbedObject)
         {
-            Vector3 axisVector = new Vector3(axisX, 0, axisZ);
-            if (axisVector.magnitude > 0)
-            {
-                Vector3 velocityDir = axisVector.normalized;
-                transform.rotation = Quaternion.Slerp(Quaternion.LookRotation(transform.forward),
-                                                      Quaternion.LookRotation(velocityDir),
-                                                      rotSpeed * /*rb.velocity.magnitude **/ Time.deltaTime);
-
-                Vector3 velocity = (transform.forward * baseSpeed);
-                velocity *= speedVsDotCurve.Evaluate(Vector3.Dot(transform.forward, velocityDir));
-                rb.velocity = new Vector3(velocity.x, rb.velocity.y, velocity.z);
-            }
+            return 1.0f - (grabbedObject.GetSize() * 0.1f);
         }
-        else
-        {
-            rb.velocity = new Vector3(0, rb.velocity.y, 0);
-        }
-
-        animator.SetFloat("Velocity", rb.velocity.magnitude / baseSpeed);
+        return 1.0f;
     }
 
     void GrabObject(GrabbableObject grabbableObject)
