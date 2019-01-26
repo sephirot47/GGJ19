@@ -33,29 +33,21 @@ public class Player : MonoBehaviour
     public float rotSpeed = 100.0f;
     public AnimationCurve speedVsDotCurve;
     public PlayerId playerId;
+    public GameObject grabbableObjectPrefab;
 
+    private int nextSizeOfObjectToPick = 0;
     private Animator animator;
     private Rigidbody rb;
     private GameObject handSocket;
+    private bool isInsideParking;
     private GrabbableObject grabbedObject = null;
-
-    private GrabbableObject lastGrabbedObject = null;
-    private float lastGrabbedObjectReleaseTime = 0.0f;
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
         handSocket = gameObject.transform.FindDeepChild("HandSocket").gameObject;
-    }
-
-    private Vector3 Planar(Vector3 v)
-    {
-        return new Vector3(v.x, 0, v.z);
-    }
-    private Vector3 PlanarNorm(Vector3 v)
-    {
-        return Planar(v).normalized;
+        SetIsInsideParking(false);
     }
 
     private void Update()
@@ -63,87 +55,67 @@ public class Player : MonoBehaviour
         bool justGrabbed = false;
 
         List<GrabbableObject> grabbableObjects = new List<GrabbableObject>(FindObjectsOfType<GrabbableObject>());
-        GrabbableObject closestGrabbableObject = null;
-        if (!grabbedObject)
+        foreach (GrabbableObject grabbableObject in grabbableObjects)
         {
-            float closestGrabbableObjectDist = -999999.9f;
-            foreach (GrabbableObject grabbableObject in grabbableObjects)
-            {
-                float dist = Vector3.Distance(Planar(grabbableObject.transform.position), Planar(transform.position));
-                float dot = Vector3.Dot(PlanarNorm(transform.forward), PlanarNorm(grabbableObject.transform.position - transform.position));
-                if (dot < 0 || dist >= 1.5 || grabbableObject == lastGrabbedObject)
-                {
-                    continue;
-                }
-
-                float closenessHeuristic = (1.0f / dist) * dot;
-                if (closenessHeuristic >= closestGrabbableObjectDist)
-                {
-                    closestGrabbableObjectDist = closenessHeuristic;
-                    closestGrabbableObject = grabbableObject;
-                }
-            }
-
-            if (Input.GetButtonDown("Action" + playerId.ToString()))
-            {
-                if (closestGrabbableObject)
-                {
-                    grabbedObject = closestGrabbableObject;
-                    grabbedObject.PrepareRigidbodyForGrabbing(true);
-
-                    grabbedObject.transform.parent = handSocket.transform;
-                    grabbedObject.transform.localPosition = Vector3.zero;
-                    grabbedObject.transform.localRotation = Quaternion.identity;
-
-                    justGrabbed = true;
-                }   
-            }
+            grabbableObject.SetFocused(false, this);
         }
 
-        if (grabbedObject)
+        if (isInsideParking)
         {
-            foreach (GrabbableObject grabbableObject in grabbableObjects)
+            if (Input.GetButtonDown("Action" + playerId.ToString()))
             {
-                grabbableObject.SetFocused(false, 0);
+                if (grabbedObject)
+                {
+                    grabbedObject.gameObject.SetActive(false);
+                    GameObject.Destroy(grabbedObject.gameObject);
+                    ReleaseGrabbedObject();
+                }
+
+                GameObject newGrabbableObjectGo = GameObject.Instantiate<GameObject>(grabbableObjectPrefab);
+                GrabbableObject newGrabbableObject = newGrabbableObjectGo.GetComponent<GrabbableObject>();
+                GrabObject(newGrabbableObject);
+                newGrabbableObject.SetSize(nextSizeOfObjectToPick);
+
+                nextSizeOfObjectToPick = (nextSizeOfObjectToPick + 1) % 3;
             }
         }
         else
         {
-            foreach (GrabbableObject grabbableObject in grabbableObjects)
+            GrabbableObject closestGrabbableObject = null;
+            if (!grabbedObject)
             {
-                if (closestGrabbableObject == grabbableObject)
+                float closestGrabbableObjectDist = 0.0f;
+                foreach (GrabbableObject grabbableObject in grabbableObjects)
                 {
-                    grabbableObject.SetFocused(true, 0);
+                    float closenessHeuristic = GrabbableObject.GetGrabHeuristic(grabbableObject, this);
+                    if (closenessHeuristic >= closestGrabbableObjectDist)
+                    {
+                        closestGrabbableObjectDist = closenessHeuristic;
+                        closestGrabbableObject = grabbableObject;
+                    }
                 }
-                else
+
+                if (Input.GetButtonDown("Action" + playerId.ToString()))
                 {
-                    grabbableObject.SetFocused(false, 0);
+                    if (closestGrabbableObject)
+                    {
+                        GrabObject(closestGrabbableObject);
+                        justGrabbed = true;
+                    }
                 }
             }
-        }
 
-        if (grabbedObject)
-        {
-            if (!justGrabbed && Input.GetButtonDown("Action" + playerId.ToString()))
+            if (!grabbedObject && closestGrabbableObject)
             {
-                animator.SetTrigger("Throw");
+                closestGrabbableObject.SetFocused(true, this);
             }
-        }
 
-        if (lastGrabbedObject)
-        {
-            if (Time.time - lastGrabbedObjectReleaseTime >= 1.0f)
+            if (grabbedObject)
             {
-                Physics.IgnoreCollision(lastGrabbedObject.GetComponent<Collider>(),
-                                        GetComponent<Collider>(),
-                                        false);
-                lastGrabbedObject = null;
-            }
-            else
-            {
-                Physics.IgnoreCollision(lastGrabbedObject.GetComponent<Collider>(),
-                                        GetComponent<Collider>(),
-                                        true);
+                if (!justGrabbed && Input.GetButtonDown("Action" + playerId.ToString()))
+                {
+                    animator.SetTrigger("Throw");
+                }
             }
         }
     }
@@ -155,6 +127,10 @@ public class Player : MonoBehaviour
 
         bool canWalk = true;
         if (playerId == PlayerId.DAD)
+        {
+            canWalk = !animator.GetCurrentAnimatorStateInfo(1).IsName("Throw");
+        }
+        else if (playerId == PlayerId.MUM)
         {
             canWalk = !animator.GetCurrentAnimatorStateInfo(1).IsName("Throw");
         }
@@ -170,27 +146,55 @@ public class Player : MonoBehaviour
                                                       rotSpeed * /*rb.velocity.magnitude **/ Time.deltaTime);
 
                 Vector3 velocity = (transform.forward * baseSpeed);
-                velocity *= speedVsDotCurve.Evaluate(Vector3.Dot(transform.forward, velocityDir)); //  * 0.5f + 0.5f;
+                velocity *= speedVsDotCurve.Evaluate(Vector3.Dot(transform.forward, velocityDir));
                 rb.velocity = new Vector3(velocity.x, rb.velocity.y, velocity.z);
             }
             animator.SetFloat("Velocity", rb.velocity.magnitude / baseSpeed);
         }
     }
 
+    void GrabObject(GrabbableObject grabbableObject)
+    {
+        grabbedObject = grabbableObject;
+        grabbedObject.SetGrabbed(true);
+
+        grabbedObject.transform.SetParent(handSocket.transform);
+        grabbedObject.transform.localPosition = Vector3.zero;
+        grabbedObject.transform.localRotation = Quaternion.identity;
+    }
+
     void ReleaseGrabbedObject()
     {
         if (grabbedObject)
         {
-            lastGrabbedObject = grabbedObject;
-            lastGrabbedObjectReleaseTime = Time.time;
-
             grabbedObject.transform.parent = null;
-            grabbedObject.PrepareRigidbodyForGrabbing(false);
+            grabbedObject.SetGrabbed(false);
 
             Rigidbody grabbedObjectRB = grabbedObject.GetComponent<Rigidbody>();
             grabbedObjectRB.velocity = transform.forward * 10.0f;
 
             grabbedObject = null;
+        }
+    }
+
+    public void SetIsInsideParking(bool insideParking)
+    {
+        bool hasChanged = (isInsideParking != insideParking);
+
+        isInsideParking = insideParking;
+
+        Outline outline = GetComponent<Outline>();
+        if (isInsideParking)
+        {
+            outline.enabled = true;
+            if (hasChanged)
+            {
+                nextSizeOfObjectToPick = 0;
+            }
+        }
+        else
+        {
+            outline.enabled = false;
         }
     }
 
