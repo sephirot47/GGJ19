@@ -26,7 +26,7 @@ public class Core : MonoBehaviour
     void Update()
     {
         float passedTimeSecs = (Time.time - beginTimeSecs);
-        float remainingTimeSecs = (20 - passedTimeSecs);
+        float remainingTimeSecs = (10 - passedTimeSecs);
 
         int seconds = (int)(remainingTimeSecs) % 60;
         int minutes = (int)(remainingTimeSecs / 60) % 60;
@@ -42,10 +42,9 @@ public class Core : MonoBehaviour
                 if (pair.Value > maxScore)
                 {
                     maxScore = pair.Value;
-                    winnerPlayerId = pair.Key;
+                    Core.winnerPlayerId = pair.Key;
                 }
             }
-
             SceneManager.LoadScene("Win");
         }
     }
@@ -54,6 +53,5 @@ public class Core : MonoBehaviour
     {
         int prevScore = scores[playerId];
         scores[playerId] = (prevScore + amount);
-        Debug.Log(scores);
     }
 }

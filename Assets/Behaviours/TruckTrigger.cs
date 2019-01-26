@@ -28,7 +28,7 @@ public class TruckTrigger : MonoBehaviour
 
     private void ProcessTrigger(Collider collider, bool enter)
     {
-        GrabbableObject grabbableObject = collider.GetComponentInChildren<GrabbableObject>();
+        GrabbableObject grabbableObject = collider.GetComponentInParent<GrabbableObject>();
         if (grabbableObject)
         {
             int objectSize = grabbableObject.GetSize();

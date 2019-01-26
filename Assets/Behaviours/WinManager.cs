@@ -12,7 +12,6 @@ public class WinManager : MonoBehaviour
 
     void Start()
     {
-        Core.winnerPlayerId = PlayerId.DAD;
     }
     
     void Update()
