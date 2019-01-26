@@ -68,6 +68,8 @@ public class Player : MonoBehaviour
     {
         if (Core.core.GetState() != Core.State.PLAYING)
         {
+            animator.SetFloat("Velocity", 0.0f);
+            animator.SetBool("Grabbing", false);
             return;
         }
 
@@ -75,6 +77,7 @@ public class Player : MonoBehaviour
         float axisZ = Input.GetAxis("Vertical" + playerId.ToString());
 
         Vector3 velocity = Vector3.zero;
+        Vector3 velocityWithoutWeight = Vector3.zero;
         if (CanWalk())
         {
             Vector3 axisVector = new Vector3(axisX, 0, axisZ);
@@ -84,15 +87,15 @@ public class Player : MonoBehaviour
                 transform.rotation = Quaternion.Slerp(Quaternion.LookRotation(transform.forward),
                                                       Quaternion.LookRotation(velocityDir),
                                                       rotSpeed * Time.deltaTime);
-
-                float baseSpeedFactored = baseSpeed * GetWeightSpeedFactor();
-                velocity = (transform.forward * baseSpeedFactored);
+                
+                velocityWithoutWeight = transform.forward * baseSpeed;
+                velocity = velocityWithoutWeight * GetWeightSpeedFactor();
                 velocity *= speedVsDotCurve.Evaluate(Vector3.Dot(transform.forward, velocityDir));
             }
         }
 
         cc.SimpleMove(new Vector3(velocity.x, cc.velocity.y, velocity.z));
-        animator.SetFloat("Velocity", Planar(velocity).magnitude / baseSpeed);
+        animator.SetFloat("Velocity", Planar(velocityWithoutWeight).magnitude / baseSpeed);
 
         bool justGrabbed = false;
 

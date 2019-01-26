@@ -731,6 +731,7 @@ GameObject:
   - component: {fileID: 534669908}
   - component: {fileID: 534669911}
   - component: {fileID: 534669909}
+  - component: {fileID: 534669910}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -834,7 +835,7 @@ PlayableDirector:
   m_InitialState: 1
   m_WrapMode: 2
   m_DirectorUpdateMode: 1
-  m_InitialTime: 28
+  m_InitialTime: 0
   m_SceneBindings:
   - key: {fileID: 114692107887936936, guid: 0ed545bf84409cd469291b6ab6addc9a, type: 2}
     value: {fileID: 534669906}
@@ -890,6 +891,19 @@ MonoBehaviour:
   OverrideAttenuation: 0
   OverrideMinDistance: 0
   OverrideMaxDistance: 0
+--- !u!114 &534669910
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 534669902}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff26db721962cdf4a8edcdfa9a767d2a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  profile: {fileID: 11400000, guid: 6f71dd2403d48f240a0ede5e71685335, type: 2}
 --- !u!114 &534669911
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3177,7 +3191,41 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   countdownText: {fileID: 1633790277}
-  roundTime: 15
+  truckTrigger: {fileID: 2031989750}
+  truckLeaveSpeed:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: -0.0106935315
+      value: -0.06259999
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.17962234
+      value: -0.5995064
+      inSlope: -0.051925424
+      outSlope: -0.051925424
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 1
+      outWeight: 0.107236445
+    - serializedVersion: 3
+      time: 0.25046873
+      value: 16.431227
+      inSlope: 488.93076
+      outSlope: 488.93076
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.08017022
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  roundTime: 6
   maxShuffleTime: 7
   maxShowControlsTime: 7
   mum: {fileID: 1660313436}

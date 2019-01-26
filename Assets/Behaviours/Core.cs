@@ -16,7 +16,8 @@ public class Core : MonoBehaviour
     };
 
     public TextMeshProUGUI countdownText;
-    private TruckTrigger truckTrigger;
+    public TruckTrigger truckTrigger;
+    public AnimationCurve truckLeaveSpeed;
     Dictionary<PlayerId, int> scores;
     private float beginPlayTimeSecs;
     public float roundTime;
@@ -28,6 +29,7 @@ public class Core : MonoBehaviour
 
     private float showControlsTimeBegin;
     public float maxShowControlsTime;
+    private float endingTimeBegin;
 
     public static Core core;
     public GameObject mum, dad, child;
@@ -67,6 +69,8 @@ public class Core : MonoBehaviour
             if (remainingTimeSecs <= 0)
             {
                 state = State.ENDING;
+                endingTimeBegin = Time.time;
+                FindObjectOfType<TruckAnimationController>().GetComponentInChildren<Animation>().Play("Open");
             }
         }
         else if (state == State.SHUFFLING)
@@ -133,16 +137,27 @@ public class Core : MonoBehaviour
         }
         else if (state == State.ENDING)
         {
-            int maxScore = 0;
-            foreach (KeyValuePair<PlayerId, int> pair in scores)
+            float endingTime = (Time.time - endingTimeBegin);
+
+            if (endingTime > 6.0f)
             {
-                if (pair.Value > maxScore)
-                {
-                    maxScore = pair.Value;
-                    Core.winnerPlayerId = pair.Key;
-                }
+                float speed = truckLeaveSpeed.Evaluate((endingTime-6) / 4.0f);
+                truckTrigger.transform.parent.Translate(Vector3.right * speed * Time.deltaTime);
             }
-            SceneManager.LoadScene("Win");
+
+            if (endingTime > 12.0f)
+            {
+                int maxScore = 0;
+                foreach (KeyValuePair<PlayerId, int> pair in scores)
+                {
+                    if (pair.Value > maxScore)
+                    {
+                        maxScore = pair.Value;
+                        Core.winnerPlayerId = pair.Key;
+                    }
+                }
+                SceneManager.LoadScene("Win");
+            }
         }
     }
 
