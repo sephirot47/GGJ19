@@ -19,7 +19,8 @@ public class GrabbableObject : MonoBehaviour
     void Awake()
     {
         playersFocus = new Dictionary<Player, float>();
-        rb = GetComponent<Rigidbody>();
+        rb = GetComponentInChildren<Rigidbody>();
+        GetComponentInChildren<Outline>().enabled = false;
     }
 
     void Update()
@@ -62,7 +63,7 @@ public class GrabbableObject : MonoBehaviour
             }
         }
 
-        Outline outline = GetComponent<Outline>();
+        Outline outline = GetComponentInChildren<Outline>();
         if (maxGrabPlayer && state == State.IDLE)
         {
             Color outlineColor = (maxGrabPlayer.playerId == PlayerId.CHILD ? Color.blue :
@@ -88,6 +89,7 @@ public class GrabbableObject : MonoBehaviour
     public void SetSize(int size)
     {
         objectSize = size;
+        /*
         float scaleFactorBasedOnPlayer = (playerOwnerId == PlayerId.CHILD ? 1.0f :
             playerOwnerId == PlayerId.DAD ? 2.0f : 2.0f);
         switch (size)
@@ -105,6 +107,7 @@ public class GrabbableObject : MonoBehaviour
                 break;
         }
         transform.localScale = transform.localScale * scaleFactorBasedOnPlayer;
+        */
     }
 
     public void SetOwner(PlayerId playerOwnerId_)

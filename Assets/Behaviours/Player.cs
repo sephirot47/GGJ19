@@ -33,7 +33,6 @@ public class Player : MonoBehaviour
     public float rotSpeed = 100.0f;
     public AnimationCurve speedVsDotCurve;
     public PlayerId playerId;
-    public GameObject grabbableObjectPrefab;
 
     private int nextSizeOfObjectToPick;
     private Animator animator;
@@ -43,6 +42,10 @@ public class Player : MonoBehaviour
     private bool isInsideParking;
     private GrabbableObject grabbedObject = null;
 
+    public List<GameObject> grabbableObjectsPrefabsBig;
+    public List<GameObject> grabbableObjectsPrefabsMedium;
+    public List<GameObject> grabbableObjectsPrefabsSmall;
+
     void Start()
     {
         cc = GetComponent<CharacterController>();
@@ -50,6 +53,15 @@ public class Player : MonoBehaviour
         handSocket = gameObject.transform.FindDeepChild("HandSocket").gameObject;
         grabSocket = gameObject.transform.FindDeepChild("GrabSocket").gameObject;
         SetIsInsideParking(false);
+        
+        grabbableObjectsPrefabsBig = new List<GameObject>();
+        grabbableObjectsPrefabsMedium = new List<GameObject>();
+        grabbableObjectsPrefabsSmall = new List<GameObject>();
+        grabbableObjectsPrefabsBig.Add(Resources.Load<GameObject>("Objects_L/jar_L"));
+        grabbableObjectsPrefabsBig.Add(Resources.Load<GameObject>("Objects_L/carpet_L"));
+        grabbableObjectsPrefabsMedium.Add(Resources.Load<GameObject>("Objects_M/suitcase_M"));
+        grabbableObjectsPrefabsMedium.Add(Resources.Load<GameObject>("Objects_M/crt_M"));
+        grabbableObjectsPrefabsSmall.Add(Resources.Load<GameObject>("Objects_S/clothLamp_S"));
     }
 
     private void Update()
@@ -101,12 +113,18 @@ public class Player : MonoBehaviour
                     ReleaseGrabbedObject();
                 }
 
-                GameObject newGrabbableObjectGo = GameObject.Instantiate<GameObject>(grabbableObjectPrefab);
+                GameObject prefab = null;
+                List<GameObject> prefabList = (nextSizeOfObjectToPick == 1 ?
+                    grabbableObjectsPrefabsSmall : nextSizeOfObjectToPick == 2 ?
+                    grabbableObjectsPrefabsMedium : grabbableObjectsPrefabsBig);
+                prefab = prefabList[ Random.Range(0, prefabList.Count) ];
+                
+                GameObject newGrabbableObjectGo = GameObject.Instantiate<GameObject>(prefab);
                 GrabbableObject newGrabbableObject = newGrabbableObjectGo.GetComponent<GrabbableObject>();
                 GrabObject(newGrabbableObject);
                 newGrabbableObject.SetOwner(playerId);
                 newGrabbableObject.SetSize(nextSizeOfObjectToPick);
-
+               
                 nextSizeOfObjectToPick++;
                 if (nextSizeOfObjectToPick >= 4)
                 {
@@ -207,7 +225,7 @@ public class Player : MonoBehaviour
             grabbedObject.transform.parent = null;
             grabbedObject.SetGrabbed(false);
 
-            Rigidbody grabbedObjectRB = grabbedObject.GetComponent<Rigidbody>();
+            Rigidbody grabbedObjectRB = grabbedObject.GetComponentInChildren<Rigidbody>();
             grabbedObjectRB.velocity = transform.forward * 10.0f;
 
             grabbedObject = null;

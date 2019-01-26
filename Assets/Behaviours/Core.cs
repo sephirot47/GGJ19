@@ -11,7 +11,8 @@ public class Core : MonoBehaviour
         INTRO,
         SHUFFLING,
         SHOW_CONTROLS,
-        PLAYING
+        PLAYING,
+        ENDING
     };
 
     public TextMeshProUGUI countdownText;
@@ -65,16 +66,7 @@ public class Core : MonoBehaviour
 
             if (remainingTimeSecs <= 0)
             {
-                int maxScore = 0;
-                foreach (KeyValuePair<PlayerId, int> pair in scores)
-                {
-                    if (pair.Value > maxScore)
-                    {
-                        maxScore = pair.Value;
-                        Core.winnerPlayerId = pair.Key;
-                    }
-                }
-                SceneManager.LoadScene("Win");
+                state = State.ENDING;
             }
         }
         else if (state == State.SHUFFLING)
@@ -138,6 +130,19 @@ public class Core : MonoBehaviour
             if (showControlsTime > maxShowControlsTime)
             {
             }
+        }
+        else if (state == State.ENDING)
+        {
+            int maxScore = 0;
+            foreach (KeyValuePair<PlayerId, int> pair in scores)
+            {
+                if (pair.Value > maxScore)
+                {
+                    maxScore = pair.Value;
+                    Core.winnerPlayerId = pair.Key;
+                }
+            }
+            SceneManager.LoadScene("Win");
         }
     }
 

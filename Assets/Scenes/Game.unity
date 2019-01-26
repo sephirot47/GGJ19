@@ -834,7 +834,7 @@ PlayableDirector:
   m_InitialState: 1
   m_WrapMode: 2
   m_DirectorUpdateMode: 1
-  m_InitialTime: 0
+  m_InitialTime: 28
   m_SceneBindings:
   - key: {fileID: 114692107887936936, guid: 0ed545bf84409cd469291b6ab6addc9a, type: 2}
     value: {fileID: 534669906}
@@ -1162,8 +1162,9 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   playerId: 2
-  grabbableObjectPrefab: {fileID: 1988975036842261873, guid: 7910c9b01bc18d943b32b08c7426bd68,
-    type: 3}
+  grabbableObjectsPrefabsBig: []
+  grabbableObjectsPrefabsMedium: []
+  grabbableObjectsPrefabsSmall: []
 --- !u!143 &631126029
 CharacterController:
   m_ObjectHideFlags: 0
@@ -3106,8 +3107,9 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   playerId: 0
-  grabbableObjectPrefab: {fileID: 1988975036842261873, guid: 7910c9b01bc18d943b32b08c7426bd68,
-    type: 3}
+  grabbableObjectsPrefabsBig: []
+  grabbableObjectsPrefabsMedium: []
+  grabbableObjectsPrefabsSmall: []
 --- !u!143 &1186593484
 CharacterController:
   m_ObjectHideFlags: 0
@@ -3154,6 +3156,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1240528254}
   - component: {fileID: 1240528253}
+  - component: {fileID: 1240528255}
   m_Layer: 0
   m_Name: Core
   m_TagString: Untagged
@@ -3194,6 +3197,23 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!320 &1240528255
+PlayableDirector:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1240528252}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_PlayableAsset: {fileID: 11400000, guid: b3884d97840e86d49ab61bddfc3446a8, type: 2}
+  m_InitialState: 0
+  m_WrapMode: 2
+  m_DirectorUpdateMode: 1
+  m_InitialTime: 0
+  m_SceneBindings: []
+  m_ExposedReferences:
+    m_References: []
 --- !u!1001 &1338866117
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4060,8 +4080,9 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   playerId: 1
-  grabbableObjectPrefab: {fileID: 1988975036842261873, guid: 7910c9b01bc18d943b32b08c7426bd68,
-    type: 3}
+  grabbableObjectsPrefabsBig: []
+  grabbableObjectsPrefabsMedium: []
+  grabbableObjectsPrefabsSmall: []
 --- !u!143 &1660313438
 CharacterController:
   m_ObjectHideFlags: 0
