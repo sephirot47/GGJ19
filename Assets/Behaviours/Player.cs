@@ -20,11 +20,19 @@ public static class TransformDeepChildExtension
     }
 }
 
+public enum PlayerId
+{
+    CHILD = 0,
+    MUM,
+    DAD
+};
+
 public class Player : MonoBehaviour
 {
     public float baseSpeed = 3.0f;
     public float rotSpeed = 100.0f;
     public AnimationCurve speedVsDotCurve;
+    public PlayerId playerId;
 
     private Animator animator;
     private Rigidbody rb;
@@ -63,7 +71,7 @@ public class Player : MonoBehaviour
             {
                 float dist = Vector3.Distance(Planar(grabbableObject.transform.position), Planar(transform.position));
                 float dot = Vector3.Dot(PlanarNorm(transform.forward), PlanarNorm(grabbableObject.transform.position - transform.position));
-                if (dot < 0 || dist >= 1 || grabbableObject == lastGrabbedObject)
+                if (dot < 0 || dist >= 1.5 || grabbableObject == lastGrabbedObject)
                 {
                     continue;
                 }
@@ -76,7 +84,7 @@ public class Player : MonoBehaviour
                 }
             }
 
-            if (Input.GetKeyDown(KeyCode.LeftControl))
+            if (Input.GetButtonDown("Action" + playerId.ToString()))
             {
                 if (closestGrabbableObject)
                 {
@@ -88,7 +96,7 @@ public class Player : MonoBehaviour
                     grabbedObject.transform.localRotation = Quaternion.identity;
 
                     justGrabbed = true;
-                }
+                }   
             }
         }
 
@@ -116,7 +124,7 @@ public class Player : MonoBehaviour
 
         if (grabbedObject)
         {
-            if (!justGrabbed && Input.GetKeyDown(KeyCode.LeftControl))
+            if (!justGrabbed && Input.GetButtonDown("Action" + playerId.ToString()))
             {
                 animator.SetTrigger("Throw");
             }
@@ -142,22 +150,31 @@ public class Player : MonoBehaviour
 
     void FixedUpdate()
     {
-        float axisX = Input.GetAxis("Horizontal");
-        float axisZ = Input.GetAxis("Vertical");
+        float axisX = Input.GetAxis("Horizontal" + playerId.ToString());
+        float axisZ = Input.GetAxis("Vertical" + playerId.ToString());
 
-        Vector3 axisVector = new Vector3(axisX, 0, axisZ);
-        if (axisVector.magnitude > 0)
+        bool canWalk = true;
+        if (playerId == PlayerId.DAD)
         {
-            Vector3 velocityDir = axisVector.normalized;
-            transform.rotation = Quaternion.Slerp(Quaternion.LookRotation(transform.forward),
-                                                  Quaternion.LookRotation(velocityDir),
-                                                  rotSpeed * /*rb.velocity.magnitude **/ Time.deltaTime);
-
-            Vector3 velocity = (transform.forward * baseSpeed);
-            velocity *= speedVsDotCurve.Evaluate(Vector3.Dot(transform.forward, velocityDir)); //  * 0.5f + 0.5f;
-            rb.velocity = new Vector3(velocity.x, rb.velocity.y, velocity.z);
+            canWalk = !animator.GetCurrentAnimatorStateInfo(1).IsName("Throw");
         }
-        animator.SetFloat("Velocity", rb.velocity.magnitude / baseSpeed);
+
+        if (canWalk)
+        {
+            Vector3 axisVector = new Vector3(axisX, 0, axisZ);
+            if (axisVector.magnitude > 0)
+            {
+                Vector3 velocityDir = axisVector.normalized;
+                transform.rotation = Quaternion.Slerp(Quaternion.LookRotation(transform.forward),
+                                                      Quaternion.LookRotation(velocityDir),
+                                                      rotSpeed * /*rb.velocity.magnitude **/ Time.deltaTime);
+
+                Vector3 velocity = (transform.forward * baseSpeed);
+                velocity *= speedVsDotCurve.Evaluate(Vector3.Dot(transform.forward, velocityDir)); //  * 0.5f + 0.5f;
+                rb.velocity = new Vector3(velocity.x, rb.velocity.y, velocity.z);
+            }
+            animator.SetFloat("Velocity", rb.velocity.magnitude / baseSpeed);
+        }
     }
 
     void ReleaseGrabbedObject()

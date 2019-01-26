@@ -22,7 +22,7 @@ public class GrabbableObject : MonoBehaviour
         rb.detectCollisions = !forGrabbing;
     }
 
-    public void SetFocused(bool focused, int playerId)
+    public void SetFocused(bool focused, PlayerId playerId)
     {
         Outline outline = GetComponent<Outline>();
         if (focused)
