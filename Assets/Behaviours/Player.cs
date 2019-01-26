@@ -54,6 +54,11 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
+        if (Core.core.GetState() != Core.State.PLAYING)
+        {
+            return;
+        }
+
         float axisX = Input.GetAxis("Horizontal" + playerId.ToString());
         float axisZ = Input.GetAxis("Vertical" + playerId.ToString());
 

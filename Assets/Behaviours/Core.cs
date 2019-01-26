@@ -18,6 +18,7 @@ public class Core : MonoBehaviour
     private TruckTrigger truckTrigger;
     Dictionary<PlayerId, int> scores;
     private float beginPlayTimeSecs;
+    public float roundTime;
 
     private State state  = State.INTRO;
     private float shuffleTimeBegin;
@@ -26,34 +27,41 @@ public class Core : MonoBehaviour
 
     private float showControlsTimeBegin;
     public float maxShowControlsTime;
-    
+
+    public static Core core;
     public GameObject mum, dad, child;
     public static PlayerId winnerPlayerId = PlayerId.CHILD;
 
     void Start()
     {
+        Core.core = this;
+
         scores = new Dictionary<PlayerId, int>();
         scores[PlayerId.CHILD] = 0;
         scores[PlayerId.DAD] = 0;
         scores[PlayerId.MUM] = 0;
+    }
+
+    void UpdateCountDownText(float remainingTimeSecs)
+    {
+        int seconds = (int)(remainingTimeSecs) % 60;
+        int minutes = (int)(remainingTimeSecs / 60) % 60;
+        string secondsStr = (seconds >= 10 ? "" : "0") + (seconds.ToString());
+        string minutesStr = (minutes >= 10 ? "" : "0") + (minutes.ToString());
+        countdownText.SetText(minutesStr + ":" + secondsStr);
     }
     
     void Update()
     {
         if (state == State.INTRO)
         {
-
+            UpdateCountDownText(roundTime);
         }
         else if (state == State.PLAYING)
         {
             float passedTimeSecs = (Time.time - beginPlayTimeSecs);
-            float remainingTimeSecs = (10 - passedTimeSecs);
-
-            int seconds = (int)(remainingTimeSecs) % 60;
-            int minutes = (int)(remainingTimeSecs / 60) % 60;
-            string secondsStr = (seconds >= 10 ? "" : "0") + (seconds.ToString());
-            string minutesStr = (minutes >= 10 ? "" : "0") + (minutes.ToString());
-            countdownText.SetText(minutesStr + ":" + secondsStr);
+            float remainingTimeSecs = (roundTime - passedTimeSecs);
+            UpdateCountDownText(remainingTimeSecs);
 
             if (remainingTimeSecs <= 0)
             {
@@ -105,7 +113,6 @@ public class Core : MonoBehaviour
                         }
                         while (++j < 50 && minDistance < 1.0);
                         generatedColors[i] = characterColor;
-                        Debug.Log(minDistance);
 
                         foreach (SkinnedMeshRenderer mr in character.GetComponentsInChildren<SkinnedMeshRenderer>())
                         {
@@ -132,6 +139,11 @@ public class Core : MonoBehaviour
             {
             }
         }
+    }
+
+    public State GetState()
+    {
+        return state;
     }
 
     public void AddToScore(PlayerId playerId, int amount)

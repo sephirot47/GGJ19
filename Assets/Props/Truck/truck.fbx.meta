@@ -58,7 +58,14 @@ ModelImporter:
     4300010: R_SideDoor
     4300012: Wheels
     4300014: TruckBase
-  externalObjects: {}
+    4300016: Truck
+    11100000: //RootNode
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Truck_MAT
+    second: {fileID: 2100000, guid: b3a05c1bbfd414fc98f0b4dcfc33b7e4, type: 2}
   materials:
     importMaterials: 1
     materialName: 0
@@ -138,7 +145,7 @@ ModelImporter:
     hasExtraRoot: 0
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
-  animationType: 0
+  animationType: 1
   humanoidOversampling: 1
   additionalBone: 0
   userData: 
