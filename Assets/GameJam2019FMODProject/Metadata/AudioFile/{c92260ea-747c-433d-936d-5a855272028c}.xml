@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.01.10.00">
+    <object class="AudioFile" id="{c92260ea-747c-433d-936d-5a855272028c}">
+        <property name="assetPath">
+            <value>bas_GameJam_1_drums.wav</value>
+        </property>
+        <property name="isStreaming">
+            <value>true</value>
+        </property>
+        <property name="frequencyInKHz">
+            <value>44.0999985</value>
+        </property>
+        <property name="channelCount">
+            <value>2</value>
+        </property>
+        <property name="length">
+            <value>124.76083900226757</value>
+        </property>
+        <relationship name="masterAssetFolder">
+            <destination>{c04aa0a9-1f80-4b29-9674-266193f66f47}</destination>
+        </relationship>
+    </object>
+</objects>
