@@ -35,7 +35,7 @@ public class Player : MonoBehaviour
     public PlayerId playerId;
     public GameObject grabbableObjectPrefab;
 
-    private int nextSizeOfObjectToPick = 0;
+    private int nextSizeOfObjectToPick;
     private Animator animator;
     private Rigidbody rb;
     private GameObject handSocket;
@@ -76,9 +76,14 @@ public class Player : MonoBehaviour
                 GameObject newGrabbableObjectGo = GameObject.Instantiate<GameObject>(grabbableObjectPrefab);
                 GrabbableObject newGrabbableObject = newGrabbableObjectGo.GetComponent<GrabbableObject>();
                 GrabObject(newGrabbableObject);
+                newGrabbableObject.SetOwner(playerId);
                 newGrabbableObject.SetSize(nextSizeOfObjectToPick);
 
-                nextSizeOfObjectToPick = (nextSizeOfObjectToPick + 1) % 3;
+                nextSizeOfObjectToPick++;
+                if (nextSizeOfObjectToPick >= 4)
+                {
+                    nextSizeOfObjectToPick = 1;
+                }
             }
         }
         else
@@ -203,7 +208,7 @@ public class Player : MonoBehaviour
             outline.enabled = true;
             if (hasChanged)
             {
-                nextSizeOfObjectToPick = 0;
+                nextSizeOfObjectToPick = 1;
             }
         }
         else

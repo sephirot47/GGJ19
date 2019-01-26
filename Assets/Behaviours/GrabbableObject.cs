@@ -11,6 +11,8 @@ public class GrabbableObject : MonoBehaviour
 
     private Rigidbody rb;
     private float timeStartedToBeThrown = 0.0f;
+    private int objectSize = 0;
+    private PlayerId playerOwnerId = PlayerId.CHILD;
     public State state = State.IDLE;
     private Dictionary<Player, float> playersFocus;
 
@@ -85,20 +87,39 @@ public class GrabbableObject : MonoBehaviour
     
     public void SetSize(int size)
     {
+        objectSize = size;
+        float scaleFactorBasedOnPlayer = (playerOwnerId == PlayerId.CHILD ? 1.0f :
+            playerOwnerId == PlayerId.DAD ? 2.0f : 2.0f);
         switch (size)
         {
-            case 0:
+            case 1:
                 transform.localScale = Vector3.one * 0.3f;
                 break;
 
-            case 1:
-                transform.localScale = Vector3.one * 0.6f;
+            case 2:
+                transform.localScale = Vector3.one * 0.3f + Vector3.up * 0.5f;
                 break;
 
-            case 2:
-                transform.localScale = Vector3.one * 0.9f;
+            case 3:
+                transform.localScale = Vector3.one * 0.3f + Vector3.up * 1.0f;
                 break;
         }
+        transform.localScale = transform.localScale * scaleFactorBasedOnPlayer;
+    }
+
+    public void SetOwner(PlayerId playerOwnerId_)
+    {
+        playerOwnerId = playerOwnerId_;
+    }
+
+    public PlayerId GetOwner()
+    {
+        return playerOwnerId;
+    }
+
+    public int GetSize()
+    {
+        return objectSize;
     }
 
     public void SetGrabbed(bool grabbed)

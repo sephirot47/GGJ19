@@ -4,15 +4,43 @@ using UnityEngine;
 
 public class TruckTrigger : MonoBehaviour
 {
-    // Start is called before the first frame update
+    Core core;
+
     void Start()
+    {
+        core = FindObjectOfType<Core>();
+    }
+
+    void Update()
     {
         
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnTriggerEnter(Collider other)
     {
-        
+        ProcessTrigger(other, true);
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        ProcessTrigger(other, false);
+    }
+
+    private void ProcessTrigger(Collider collider, bool enter)
+    {
+        GrabbableObject grabbableObject = collider.GetComponentInChildren<GrabbableObject>();
+        if (grabbableObject)
+        {
+            int objectSize = grabbableObject.GetSize();
+            PlayerId ownerId = grabbableObject.GetOwner();
+            if (enter)
+            {
+                core.AddToScore(ownerId, objectSize);
+            }
+            else
+            {
+                core.AddToScore(ownerId, -objectSize);
+            }
+        }
     }
 }
