@@ -28,7 +28,7 @@ public class GrabbableObject : MonoBehaviour
                 break;
 
             case State.GRABBED:
-                GetComponent<Collider>().enabled = false;
+                GetComponentInChildren<Collider>().enabled = false;
                 break;
 
             case State.BEING_THROWN:
@@ -43,7 +43,7 @@ public class GrabbableObject : MonoBehaviour
         {
             case State.IDLE:
             case State.BEING_THROWN:
-                GetComponent<Collider>().enabled = true;
+                GetComponentInChildren<Collider>().enabled = true;
                 break;
         }
 

@@ -39,6 +39,7 @@ public class Player : MonoBehaviour
     private Animator animator;
     private Rigidbody rb;
     private GameObject handSocket;
+    private GameObject grabSocket;
     private bool isInsideParking;
     private GrabbableObject grabbedObject = null;
 
@@ -47,6 +48,7 @@ public class Player : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
         handSocket = gameObject.transform.FindDeepChild("HandSocket").gameObject;
+        grabSocket = gameObject.transform.FindDeepChild("GrabSocket").gameObject;
         SetIsInsideParking(false);
     }
 
@@ -114,28 +116,35 @@ public class Player : MonoBehaviour
             {
                 if (!justGrabbed && Input.GetButtonDown("Action" + playerId.ToString()))
                 {
+                    grabbedObject.transform.parent = handSocket.transform;
                     animator.SetTrigger("Throw");
                 }
             }
         }
+
+        animator.SetBool("Grabbing", (grabbedObject != null));
+    }
+
+    bool CanWalk()
+    {
+        bool canWalk = true;
+        if (playerId == PlayerId.DAD)
+        {
+            canWalk = !animator.GetCurrentAnimatorStateInfo(2).IsName("Throw");
+        }
+        else if (playerId == PlayerId.MUM)
+        {
+            canWalk = !animator.GetCurrentAnimatorStateInfo(2).IsName("Throw");
+        }
+        return canWalk;
     }
 
     void FixedUpdate()
     {
         float axisX = Input.GetAxis("Horizontal" + playerId.ToString());
         float axisZ = Input.GetAxis("Vertical" + playerId.ToString());
-
-        bool canWalk = true;
-        if (playerId == PlayerId.DAD)
-        {
-            canWalk = !animator.GetCurrentAnimatorStateInfo(1).IsName("Throw");
-        }
-        else if (playerId == PlayerId.MUM)
-        {
-            canWalk = !animator.GetCurrentAnimatorStateInfo(1).IsName("Throw");
-        }
-
-        if (canWalk)
+        
+        if (CanWalk())
         {
             Vector3 axisVector = new Vector3(axisX, 0, axisZ);
             if (axisVector.magnitude > 0)
@@ -149,8 +158,13 @@ public class Player : MonoBehaviour
                 velocity *= speedVsDotCurve.Evaluate(Vector3.Dot(transform.forward, velocityDir));
                 rb.velocity = new Vector3(velocity.x, rb.velocity.y, velocity.z);
             }
-            animator.SetFloat("Velocity", rb.velocity.magnitude / baseSpeed);
         }
+        else
+        {
+            rb.velocity = new Vector3(0, rb.velocity.y, 0);
+        }
+
+        animator.SetFloat("Velocity", rb.velocity.magnitude / baseSpeed);
     }
 
     void GrabObject(GrabbableObject grabbableObject)
@@ -158,7 +172,7 @@ public class Player : MonoBehaviour
         grabbedObject = grabbableObject;
         grabbedObject.SetGrabbed(true);
 
-        grabbedObject.transform.SetParent(handSocket.transform);
+        grabbedObject.transform.SetParent(grabSocket.transform);
         grabbedObject.transform.localPosition = Vector3.zero;
         grabbedObject.transform.localRotation = Quaternion.identity;
     }
