@@ -40,7 +40,6 @@ public class TruckTrigger : MonoBehaviour
             else
             {
                 core.AddToScore(ownerId, -objectSize);
-                Debug.Log("OUT " + ownerId.ToString());
             }
         }
 

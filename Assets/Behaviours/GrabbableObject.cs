@@ -10,6 +10,7 @@ public class GrabbableObject : MonoBehaviour
     };
 
     private Rigidbody rb;
+    Player owner;
     private float timeStartedToBeThrown = 0.0f;
     private int objectSize = 0;
     private PlayerId playerOwnerId = PlayerId.CHILD;
@@ -28,6 +29,11 @@ public class GrabbableObject : MonoBehaviour
         switch (state)
         {
             case State.IDLE:
+                gameObject.layer = 0;
+                foreach (Transform child in transform)
+                {
+                    child.gameObject.layer = 0;
+                }
                 break;
 
             case State.GRABBED:
@@ -35,21 +41,29 @@ public class GrabbableObject : MonoBehaviour
                 foreach (Transform child in transform)
                 {
                     child.gameObject.layer = 11;
-                    Debug.Log(child.gameObject.layer);
                 }
                 break;
 
             case State.BEING_THROWN:
+                gameObject.layer = 11;
+                foreach (Transform child in transform)
+                {
+                    child.gameObject.layer = 11;
+                }
+
                 if (Time.time - timeStartedToBeThrown >= 1.0f)
                 {
                     state = State.IDLE;
+                    Physics.IgnoreCollision(GetComponentInChildren<Collider>(),
+                                            owner.GetComponentInChildren<Collider>(),
+                                            false);
+
                 }
                 break;
         }
 
         switch (state)
         {
-            case State.IDLE:
             case State.BEING_THROWN:
                 gameObject.layer = 0;
                 foreach (Transform child in transform)
@@ -58,7 +72,7 @@ public class GrabbableObject : MonoBehaviour
                 }
                 break;
         }
-
+        
         Player maxGrabPlayer = null;
         float maxGrabHeuristic = 0.0f;
         foreach (KeyValuePair<Player,float> pair in playersFocus)
@@ -99,9 +113,10 @@ public class GrabbableObject : MonoBehaviour
         objectSize = size;
     }
 
-    public void SetOwner(PlayerId playerOwnerId_, Color ownerColor)
+    public void SetOwner(Player playerOwner)
     {
-        playerOwnerId = playerOwnerId_;
+        owner = playerOwner;
+        playerOwnerId = owner.playerId;
 
         foreach (MeshRenderer mr in GetComponentsInChildren<MeshRenderer>())
         {
@@ -109,7 +124,7 @@ public class GrabbableObject : MonoBehaviour
             mr.GetMaterials(materials);
             foreach (Material mat in materials)
             {
-                mat.SetColor("_Color", ownerColor);
+                mat.SetColor("_Color", playerOwner.GetPlayerColor());
             }
         }
     }
@@ -132,6 +147,14 @@ public class GrabbableObject : MonoBehaviour
             timeStartedToBeThrown = Time.time;
         }
 
+        if (state == State.BEING_THROWN)
+        {
+            timeStartedToBeThrown = Time.time;
+            Physics.IgnoreCollision(GetComponentInChildren<Collider>(),
+                                    owner.GetComponentInChildren<Collider>(),
+                                    true);
+        }
+
         rb.isKinematic = grabbed;
         rb.useGravity = !grabbed;
         rb.detectCollisions = !grabbed;
@@ -141,13 +164,12 @@ public class GrabbableObject : MonoBehaviour
     {
         float dist = Vector3.Distance(Planar(grabbableObject.transform.position), Planar(player.transform.position));
         float dot = Vector3.Dot(PlanarNorm(player.transform.forward), PlanarNorm(grabbableObject.transform.position - player.transform.position));
-        if (dot < 0 || dist >= 1.5 || (grabbableObject.state != State.IDLE))
+        if (dot < -0.3 || dist >= 2.5 || (grabbableObject.state != State.IDLE))
         {
             return -999999.9f;
         }
-
-
-        float closenessHeuristic = (1.0f / dist) * dot;
+        
+        float closenessHeuristic = (1.0f / dist) * (dot + 0.3f);
         return closenessHeuristic;
     }
 

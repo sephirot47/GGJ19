@@ -41,6 +41,7 @@ public class Player : MonoBehaviour
     private GameObject grabSocket;
     private bool isInsideParking;
     private GrabbableObject grabbedObject = null;
+    private Vector3 throwDir = Vector3.zero;
 
     public List<GameObject> grabbableObjectsPrefabsBig;
     public List<GameObject> grabbableObjectsPrefabsMedium;
@@ -137,7 +138,7 @@ public class Player : MonoBehaviour
                 GameObject newGrabbableObjectGo = GameObject.Instantiate<GameObject>(prefab);
                 GrabbableObject newGrabbableObject = newGrabbableObjectGo.GetComponent<GrabbableObject>();
                 GrabObject(newGrabbableObject);
-                newGrabbableObject.SetOwner(playerId, playerColor);
+                newGrabbableObject.SetOwner(this);
                 newGrabbableObject.SetSize(sizeOfObjectToPick);
             }
         }
@@ -177,6 +178,7 @@ public class Player : MonoBehaviour
                 if (!justGrabbed && Input.GetButtonDown("Action" + playerId.ToString()))
                 {
                     grabbedObject.transform.parent = handSocket.transform;
+                    throwDir = transform.forward;
                     animator.SetTrigger("Throw");
                 }
             }
@@ -259,7 +261,7 @@ public class Player : MonoBehaviour
             grabbedObject.SetGrabbed(false);
 
             Rigidbody grabbedObjectRB = grabbedObject.GetComponentInChildren<Rigidbody>();
-            grabbedObjectRB.velocity = transform.forward * 10.0f;
+            grabbedObjectRB.velocity = throwDir * 10.0f;
 
             grabbedObject = null;
         }

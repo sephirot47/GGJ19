@@ -32,6 +32,9 @@ public class Core : MonoBehaviour
     public float maxShowControlsTime;
     private float endingTimeBegin;
 
+    public Material roofMaterial;
+    public MeshRenderer truckMeshRend;
+
     public static Core core;
     public GameObject mum, dad, child;
     public static PlayerId winnerPlayerId = PlayerId.CHILD;
@@ -50,8 +53,9 @@ public class Core : MonoBehaviour
         objectsInTruck = new List<GameObject>();
         state = State.INTRO;
         
-        FMODGeneralEvent = FMODUnity.RuntimeManager.CreateInstance(FMODGeneralEventRef);
-        // FMODGeneralEvent.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(gameObject)); 
+        FMODGeneralEvent = FMODUnity.RuntimeManager.CreateInstance(FMODGeneralEventRef); 
+        roofMaterial.SetColor("_Color", Color.black);
+
         scores = new Dictionary<PlayerId, int>();
         scores[PlayerId.CHILD] = 0;
         scores[PlayerId.DAD] = 0;
@@ -70,12 +74,12 @@ public class Core : MonoBehaviour
         {
             remainingPlayTimeText.faceColor = Color.red;
             remainingPlayTimeText.outlineColor = Color.white;
-            remainingPlayTimeText.fontSize = 80;
+            remainingPlayTimeText.fontSize = 100;
         }
         else if (remainingTimeSecs < 30)
         {
             remainingPlayTimeText.faceColor = Color.yellow;
-            remainingPlayTimeText.fontSize = 60;
+            remainingPlayTimeText.fontSize = 80;
         }
 
     }
@@ -94,25 +98,40 @@ public class Core : MonoBehaviour
             float remainingTimeSecs = (roundTime - passedTimeSecs);
             UpdateCountDownText(remainingTimeSecs);
 
-            float firstPlayerAudioWeight  = 0.0f;
-            float secondPlayerAudioWeight = 0.0f;
-            float thirdPlayerAudioWeight  = 0.0f;
-            firstPlayerAudioWeight += (scores[PlayerId.DAD] > scores[PlayerId.CHILD]) ? 1.0f : 0.0f;
-            firstPlayerAudioWeight += (scores[PlayerId.DAD] > scores[PlayerId.MUM]) ? 1.0f : 0.0f;
-            secondPlayerAudioWeight += (scores[PlayerId.MUM] > scores[PlayerId.DAD]) ? 1.0f : 0.0f;
-            secondPlayerAudioWeight += (scores[PlayerId.MUM] > scores[PlayerId.CHILD]) ? 1.0f : 0.0f;
-            thirdPlayerAudioWeight += (scores[PlayerId.CHILD] > scores[PlayerId.DAD]) ? 1.0f : 0.0f;
-            thirdPlayerAudioWeight += (scores[PlayerId.CHILD] > scores[PlayerId.MUM]) ? 1.0f : 0.0f;
+            {
+                float dadPlayerWinWeight = 0.0f;
+                float mumPlayerWinWeight = 0.0f;
+                float childPlayerWinWeight = 0.0f;
+                dadPlayerWinWeight += (scores[PlayerId.DAD] > scores[PlayerId.CHILD]) ? 1.0f : 0.0f;
+                dadPlayerWinWeight += (scores[PlayerId.DAD] > scores[PlayerId.MUM]) ? 1.0f : 0.0f;
+                mumPlayerWinWeight += (scores[PlayerId.MUM] > scores[PlayerId.DAD]) ? 1.0f : 0.0f;
+                mumPlayerWinWeight += (scores[PlayerId.MUM] > scores[PlayerId.CHILD]) ? 1.0f : 0.0f;
+                childPlayerWinWeight += (scores[PlayerId.CHILD] > scores[PlayerId.DAD]) ? 1.0f : 0.0f;
+                childPlayerWinWeight += (scores[PlayerId.CHILD] > scores[PlayerId.MUM]) ? 1.0f : 0.0f;
+                FMODGeneralEvent.setParameterValue("Player1", dadPlayerWinWeight);
+                FMODGeneralEvent.setParameterValue("Player2", mumPlayerWinWeight);
+                FMODGeneralEvent.setParameterValue("Player3", childPlayerWinWeight);
+                FMODGeneralEvent.setParameterValue("Start", 1.0f);
+            }
 
-            // Debug.Log("DAD: " + scores[PlayerId.DAD]);
-            // Debug.Log("MUM: " + scores[PlayerId.MUM]);
-            // Debug.Log("CHILD: " + scores[PlayerId.CHILD]);
-            // Debug.Log("-----------");
+            {
+                Color truckColor = Color.white;
+                Color roofColor = Color.black;
+                float totalTruckWeight = (scores[PlayerId.DAD] + scores[PlayerId.CHILD] + scores[PlayerId.MUM]);
+                if (totalTruckWeight > 0)
+                {
+                    truckColor = (dad.GetComponent<Player>().GetPlayerColor() * (scores[PlayerId.DAD] / totalTruckWeight));
+                    truckColor += (mum.GetComponent<Player>().GetPlayerColor() * (scores[PlayerId.MUM] / totalTruckWeight));
+                    truckColor += (child.GetComponent<Player>().GetPlayerColor() * (scores[PlayerId.CHILD] / totalTruckWeight));
+                    roofColor = truckColor; 
+                }
 
-            FMODGeneralEvent.setParameterValue("Player1", firstPlayerAudioWeight);
-            FMODGeneralEvent.setParameterValue("Player2", secondPlayerAudioWeight);
-            FMODGeneralEvent.setParameterValue("Player3", thirdPlayerAudioWeight);
-            FMODGeneralEvent.setParameterValue("Start",   1.0f);
+                List<Material> materials = new List<Material>();
+                truckMeshRend.GetMaterials(materials);
+                Material truckMat = materials[0];
+                truckMat.SetColor("_Color", Color.Lerp(truckMat.GetColor("_Color"), truckColor, Time.deltaTime));
+                roofMaterial.SetColor("_Color", Color.Lerp(roofMaterial.GetColor("_Color"), roofColor, Time.deltaTime));
+            }
 
             if (remainingTimeSecs <= 0)
             {

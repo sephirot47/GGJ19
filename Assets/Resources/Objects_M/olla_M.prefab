@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 886616545799508053}
   - component: {fileID: 886616545800310901}
   - component: {fileID: 886616545801278133}
-  - component: {fileID: 3795831405661195717}
   - component: {fileID: 158727093409961538}
   - component: {fileID: 3257132557284817607}
   m_Layer: 0
@@ -80,22 +79,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!54 &3795831405661195717
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 886616545799343221}
-  serializedVersion: 2
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!65 &158727093409961538
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -137,6 +120,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2300719420115898056}
   - component: {fileID: 4208451003021654070}
+  - component: {fileID: 3160579216024789831}
   m_Layer: 0
   m_Name: olla_M
   m_TagString: Untagged
@@ -172,3 +156,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   state: 0
+--- !u!54 &3160579216024789831
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2300719420116194024}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
