@@ -63,9 +63,13 @@ public class Player : MonoBehaviour
         grabbableObjectsPrefabsSmall = new List<GameObject>();
         grabbableObjectsPrefabsBig.Add(Resources.Load<GameObject>("Objects_L/jar_L"));
         grabbableObjectsPrefabsBig.Add(Resources.Load<GameObject>("Objects_L/carpet_L"));
+        grabbableObjectsPrefabsBig.Add(Resources.Load<GameObject>("Objects_L/peses_L"));
         grabbableObjectsPrefabsMedium.Add(Resources.Load<GameObject>("Objects_M/suitcase_M"));
         grabbableObjectsPrefabsMedium.Add(Resources.Load<GameObject>("Objects_M/crt_M"));
+        grabbableObjectsPrefabsMedium.Add(Resources.Load<GameObject>("Objects_M/olla_M"));
         grabbableObjectsPrefabsSmall.Add(Resources.Load<GameObject>("Objects_S/clothLamp_S"));
+        grabbableObjectsPrefabsSmall.Add(Resources.Load<GameObject>("Objects_S/revistes_S"));
+        grabbableObjectsPrefabsSmall.Add(Resources.Load<GameObject>("Objects_S/cafetera_S"));
     }
 
     private void Update()

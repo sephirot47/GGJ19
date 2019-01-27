@@ -39,12 +39,19 @@ public class Core : MonoBehaviour
     public static Color mumColor = Color.black;
     public static Color childColor = Color.black;
 
+    [FMODUnity.EventRef]
+    public string FMODGeneralEventRef;
+    FMOD.Studio.EventInstance FMODGeneralEvent;
+
     void Start()
     {
         Core.core = this;
 
         objectsInTruck = new List<GameObject>();
+        state = State.INTRO;
         
+        FMODGeneralEvent = FMODUnity.RuntimeManager.CreateInstance(FMODGeneralEventRef);
+        // FMODGeneralEvent.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(gameObject)); 
         scores = new Dictionary<PlayerId, int>();
         scores[PlayerId.CHILD] = 0;
         scores[PlayerId.DAD] = 0;
@@ -78,6 +85,8 @@ public class Core : MonoBehaviour
         if (state == State.INTRO)
         {
             UpdateCountDownText(roundTime);
+            FMODGeneralEvent.setParameterValue("Start", 1.0f);
+            FMODGeneralEvent.start();
         }
         else if (state == State.PLAYING)
         {
@@ -85,23 +94,28 @@ public class Core : MonoBehaviour
             float remainingTimeSecs = (roundTime - passedTimeSecs);
             UpdateCountDownText(remainingTimeSecs);
 
+            float firstPlayerAudioWeight  = 0.0f;
+            float secondPlayerAudioWeight = 0.0f;
+            float thirdPlayerAudioWeight  = 0.0f;
+            firstPlayerAudioWeight += (scores[PlayerId.DAD] > scores[PlayerId.CHILD]) ? 1.0f : 0.0f;
+            firstPlayerAudioWeight += (scores[PlayerId.DAD] > scores[PlayerId.MUM]) ? 1.0f : 0.0f;
+            secondPlayerAudioWeight += (scores[PlayerId.MUM] > scores[PlayerId.DAD]) ? 1.0f : 0.0f;
+            secondPlayerAudioWeight += (scores[PlayerId.MUM] > scores[PlayerId.CHILD]) ? 1.0f : 0.0f;
+            thirdPlayerAudioWeight += (scores[PlayerId.CHILD] > scores[PlayerId.DAD]) ? 1.0f : 0.0f;
+            thirdPlayerAudioWeight += (scores[PlayerId.CHILD] > scores[PlayerId.MUM]) ? 1.0f : 0.0f;
+
+            // Debug.Log("DAD: " + scores[PlayerId.DAD]);
+            // Debug.Log("MUM: " + scores[PlayerId.MUM]);
+            // Debug.Log("CHILD: " + scores[PlayerId.CHILD]);
+            // Debug.Log("-----------");
+
+            FMODGeneralEvent.setParameterValue("Player1", firstPlayerAudioWeight);
+            FMODGeneralEvent.setParameterValue("Player2", secondPlayerAudioWeight);
+            FMODGeneralEvent.setParameterValue("Player3", thirdPlayerAudioWeight);
+            FMODGeneralEvent.setParameterValue("Start",   1.0f);
+
             if (remainingTimeSecs <= 0)
             {
-                Collider[] truckColliders = truckTrigger.gameObject.GetComponentsInChildren<Collider>();
-                foreach (Collider truckCollider in truckColliders)
-                {
-                    // truckCollider.enabled = false;
-                }
-
-
-                // foreach (GameObject goInTruck in objectsInTruck)
-                // {
-                //     Component.Destroy(goInTruck.GetComponentInChildren<Rigidbody>());
-                //     Component.Destroy(goInTruck.GetComponentInChildren<Collider>());
-                //     goInTruck.transform.parent = truckTrigger.transform.parent;
-                // }
-
-
                 state = State.ENDING;
                 endingTimeBegin = Time.time;
                 FindObjectOfType<TruckAnimationController>().GetComponentInChildren<Animation>().Play("OpenRear");
@@ -162,17 +176,7 @@ public class Core : MonoBehaviour
         else if (state == State.ENDING)
         {
             float endingTime = (Time.time - endingTimeBegin);
-
             if (endingTime > 6.0f)
-            {
-                GameObject[] terrainBoundaryColliders = GameObject.FindGameObjectsWithTag("TerrainBoundaryCollider");
-                foreach (GameObject collider in terrainBoundaryColliders)
-                {
-                    collider.SetActive(false);
-                }
-            }
-
-            if (endingTime > 12.0f)
             {
                 int maxScore = 0;
                 foreach (KeyValuePair<PlayerId, int> pair in scores)

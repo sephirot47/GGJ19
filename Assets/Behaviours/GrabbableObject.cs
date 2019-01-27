@@ -31,9 +31,11 @@ public class GrabbableObject : MonoBehaviour
                 break;
 
             case State.GRABBED:
-                if (GetComponentInChildren<Collider>())
+                gameObject.layer = 11;
+                foreach (Transform child in transform)
                 {
-                    GetComponentInChildren<Collider>().enabled = false;
+                    child.gameObject.layer = 11;
+                    Debug.Log(child.gameObject.layer);
                 }
                 break;
 
@@ -49,9 +51,10 @@ public class GrabbableObject : MonoBehaviour
         {
             case State.IDLE:
             case State.BEING_THROWN:
-                if (GetComponentInChildren<Collider>())
+                gameObject.layer = 0;
+                foreach (Transform child in transform)
                 {
-                    GetComponentInChildren<Collider>().enabled = true;
+                    child.gameObject.layer = 0;
                 }
                 break;
         }
@@ -94,25 +97,6 @@ public class GrabbableObject : MonoBehaviour
     public void SetSize(int size)
     {
         objectSize = size;
-        /*
-        float scaleFactorBasedOnPlayer = (playerOwnerId == PlayerId.CHILD ? 1.0f :
-            playerOwnerId == PlayerId.DAD ? 2.0f : 2.0f);
-        switch (size)
-        {
-            case 1:
-                transform.localScale = Vector3.one * 0.3f;
-                break;
-
-            case 2:
-                transform.localScale = Vector3.one * 0.3f + Vector3.up * 0.5f;
-                break;
-
-            case 3:
-                transform.localScale = Vector3.one * 0.3f + Vector3.up * 1.0f;
-                break;
-        }
-        transform.localScale = transform.localScale * scaleFactorBasedOnPlayer;
-        */
     }
 
     public void SetOwner(PlayerId playerOwnerId_, Color ownerColor)
