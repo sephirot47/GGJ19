@@ -221,7 +221,7 @@ public class Player : MonoBehaviour
             {
                 animator.SetTrigger("FallDown");
                 ReleaseGrabbedObject();
-                timeUntilGotUp = (Time.time + 2.0f);
+                timeUntilGotUp = (Time.time + 2.5f);
             }
         }
     }
@@ -292,7 +292,7 @@ public class Player : MonoBehaviour
             grabbedObject.SetGrabbed(false);
 
             Rigidbody grabbedObjectRB = grabbedObject.GetComponentInChildren<Rigidbody>();
-            grabbedObjectRB.velocity = throwDir * 10.0f;
+            grabbedObjectRB.velocity = transform.forward * 8.0f;
 
             grabbedObject = null;
         }

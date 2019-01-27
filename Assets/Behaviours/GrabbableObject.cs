@@ -60,10 +60,10 @@ public class GrabbableObject : MonoBehaviour
                 break;
         }
 
-        if (Time.time - timeStartedToBeThrown >= 3.0f)
+        if (Time.time - timeStartedToBeThrown >= 3.0f && grabber)
         {
             Physics.IgnoreCollision(GetComponentInChildren<Collider>(),
-                                    grabber.GetComponentInChildren<Collider>(),
+                                    grabber.GetComponentInChildren<CapsuleCollider>(),
                                     false);
         }
 
@@ -157,11 +157,11 @@ public class GrabbableObject : MonoBehaviour
             timeStartedToBeThrown = Time.time;
         }
 
-        if (state == State.BEING_THROWN)
+        if (state == State.BEING_THROWN && grabber)
         {
             timeStartedToBeThrown = Time.time;
             Physics.IgnoreCollision(GetComponentInChildren<Collider>(),
-                                    grabber.GetComponentInChildren<Collider>(),
+                                    grabber.GetComponentInChildren<CapsuleCollider>(),
                                     true);
         }
 

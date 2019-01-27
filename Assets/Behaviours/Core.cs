@@ -60,6 +60,8 @@ public class Core : MonoBehaviour
         scores[PlayerId.CHILD] = 0;
         scores[PlayerId.DAD] = 0;
         scores[PlayerId.MUM] = 0;
+
+        remainingPlayTimeText.gameObject.active = false;
     }
 
     void UpdateCountDownText(float remainingTimeSecs)
@@ -94,6 +96,8 @@ public class Core : MonoBehaviour
         }
         else if (state == State.PLAYING)
         {
+            remainingPlayTimeText.gameObject.active = true;
+
             float passedTimeSecs = (Time.time - beginPlayTimeSecs);
             float remainingTimeSecs = (roundTime - passedTimeSecs);
             UpdateCountDownText(remainingTimeSecs);
