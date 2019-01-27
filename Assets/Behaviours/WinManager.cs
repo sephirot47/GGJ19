@@ -37,6 +37,10 @@ public class WinManager : MonoBehaviour
             mum.transform.position = losePos1.transform.position;
         }
 
+        Player.SetPlayerColorStatic(mum, Core.mumColor);
+        Player.SetPlayerColorStatic(dad, Core.dadColor);
+        Player.SetPlayerColorStatic(child, Core.childColor);
+
         if (Input.GetKeyDown(KeyCode.Space))
         {
             SceneManager.LoadScene("Game");

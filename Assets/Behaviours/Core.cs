@@ -106,6 +106,7 @@ public class Core : MonoBehaviour
         }
         else if (state == State.PLAYING)
         {
+            FMODGeneralEvent.setParameterValue("Start", 1.0f);
             remainingPlayTimeText.gameObject.active = true;
 
             float passedTimeSecs = (Time.time - beginPlayTimeSecs);

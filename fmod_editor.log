@@ -7,7 +7,7 @@
 [LOG] OutputWASAPI::init                       : Output buffer size: 4096 samples, latency: 0.00ms, period: 10.00ms, DSP buffer: 1024 * 4
 [LOG] Thread::initThread                       : Init FMOD stream thread. Priority: 2, Stack Size: 65536, Semaphore: No, Sleep Time: 10, Looping: Yes.
 [LOG] Thread::initThread                       : Init FMOD mixer thread. Priority: 3, Stack Size: 49152, Semaphore: No, Sleep Time: 0, Looping: Yes.
-[LOG] AsyncManager::init                       : manager 00000000714DEA38 isAsync 0 updatePeriod 0.02
+[LOG] AsyncManager::init                       : manager 000000008BB73D08 isAsync 0 updatePeriod 0.02
 [LOG] AsyncManager::init                       : done
 [LOG] PlaybackSystem::init                     : 
 [LOG] Thread::initThread                       : Init FMOD Studio sample load thread. Priority: 0, Stack Size: 65536, Semaphore: No, Sleep Time: 1, Looping: No.
@@ -16,14 +16,173 @@
 [LOG] Manager::init                            : done.
 [LOG] Manager::readBank                        : fileversion = 103, compatVersion = 99 (oldest = 44, newest = 103)
 [LOG] Manager::readBank                        : fileversion = 103, compatVersion = 99 (oldest = 44, newest = 103)
-[LOG] SoundI::release                          :  (0000000061C8AEF8)
-[LOG] SoundI::release                          :     drums2 (00000000514518C8)
-[LOG] SoundI::release                          :  (0000000061C8A378)
-[LOG] SoundI::release                          :     drums3 (0000000051451A68)
-[LOG] SoundI::release                          :  (0000000061C8B628)
-[LOG] SoundI::release                          :     drums (0000000051452F88)
-[LOG] SoundI::release                          :  (0000000061C8AD88)
-[LOG] SoundI::release                          :     intro rave (0000000051451F48)
+[LOG] Manager::readBank                        : fileversion = 103, compatVersion = 99 (oldest = 44, newest = 103)
+[LOG] Manager::readBank                        : fileversion = 103, compatVersion = 99 (oldest = 44, newest = 103)
+[LOG] Manager::readBank                        : fileversion = 103, compatVersion = 99 (oldest = 44, newest = 103)
+[LOG] Manager::readBank                        : fileversion = 103, compatVersion = 99 (oldest = 44, newest = 103)
+[LOG] PlaybackSystem::acquireMasterBus         : Setting master channel group format to 6
+[LOG] SystemI::createSound                     : filename = Assets\GameJam2019FMODProject\Build\Desktop/Master Bank.bank : mode 02010082
+[LOG] SystemI::createSound                     : FMOD_NONBLOCKING specified.  Putting into queue to be opened asynchronously!
+[LOG] Thread::initThread                       : Init FMOD nonblocking thread (0). Priority: 1, Stack Size: 81920, Semaphore: Yes, Sleep Time: 0, Looping: Yes.
+[LOG] SystemI::createSound                     : setdata soundi = 000000007A2A79D8 : node = 0000000070E37AA0
+[LOG] SystemI::createSound                     : add node to async list : head = 00000000255A5D28.  list count = 0
+[LOG] SystemI::createSound                     : filename = Assets\GameJam2019FMODProject\Build\Desktop/Master Bank.bank : mode 02010082
+[LOG] AsyncThread::threadFunc                  : Starting Asynchronous operation on sound 000000007A2A79D8
+[LOG] SystemI::createSound                     : FMOD_NONBLOCKING specified.  Putting into queue to be opened asynchronously!
+[LOG] SystemI::createSoundInternal             :     Create name='Assets\GameJam2019FMODProject\Build\Desktop/Master Bank.bank', mode=0x02010082
+[LOG] SystemI::createSound                     :     setdata soundi = 000000007A2A7B88 : node = 0000000070E37E90
+[LOG] SystemI::createSoundInternal             :     exinfo->cbsize             = 232
+[LOG] SystemI::createSound                     :     add node to async list : head = 00000000255A5D28.  list count = 0
+[LOG] SystemI::createSoundInternal             :     exinfo->length             = 9391360
+[LOG] SystemI::createSoundInternal             :     exinfo->fileoffset         = 25376
+[LOG] SystemI::createSound                     :     filename = Assets\GameJam2019FMODProject\Build\Desktop/Master Bank.bank : mode 02010082
+[LOG] SystemI::createSoundInternal             :     exinfo->numsubsounds       = 1
+[LOG] SystemI::createSound                     :     FMOD_NONBLOCKING specified.  Putting into queue to be opened asynchronously!
+[LOG] SystemI::createSoundInternal             :     exinfo->inclusionlist      = 0000000070E37BB8
+[LOG] SystemI::createSound                     :     setdata soundi = 000000007A2A7D38 : node = 0000000070E37FE0
+[LOG] SystemI::createSoundInternal             :     exinfo->inclusionlistnum   = 1
+[LOG] SystemI::createSound                     :     add node to async list : head = 00000000255A5D28.  list count = 1
+[LOG] SystemI::createSoundInternal             :     exinfo->suggestedsoundtype = 5
+[LOG] SystemI::createSoundInternal             :     exinfo->initialseekposition = 29
+[LOG] SystemI::createSound                     :     filename = Assets\GameJam2019FMODProject\Build\Desktop/Master Bank.bank : mode 02010082
+[LOG] SystemI::createSoundInternal             :     exinfo->initialseekpostype = 1
+[LOG] SystemI::createSound                     :     FMOD_NONBLOCKING specified.  Putting into queue to be opened asynchronously!
+[LOG] SystemI::createSound                     :     setdata soundi = 000000007A2A8098 : node = 0000000071226A60
+[LOG] SystemI::createSound                     :     add node to async list : head = 00000000255A5D28.  list count = 2
+[LOG] SystemI::createSound                     :     filename = Assets\GameJam2019FMODProject\Build\Desktop/Master Bank.bank : mode 02010082
+[LOG] SystemI::createSound                     :     FMOD_NONBLOCKING specified.  Putting into queue to be opened asynchronously!
+[LOG] SystemI::createSound                     :     setdata soundi = 000000007A2A9178 : node = 0000000071226BB0
+[LOG] SystemI::createSound                     :     add node to async list : head = 00000000255A5D28.  list count = 3
+[LOG] SystemI::createSound                     :     filename = Assets\GameJam2019FMODProject\Build\Desktop/Master Bank.bank : mode 02010082
+[LOG] SystemI::createSound                     :     FMOD_NONBLOCKING specified.  Putting into queue to be opened asynchronously!
+[LOG] SystemI::createSound                     :     setdata soundi = 000000007A2A8AB8 : node = 0000000071226D00
+[LOG] SystemI::createSound                     :     add node to async list : head = 00000000255A5D28.  list count = 4
+[LOG] SystemI::createSound                     :     filename = Assets\GameJam2019FMODProject\Build\Desktop/Master Bank.bank : mode 02010082
+[LOG] SystemI::createSound                     :     FMOD_NONBLOCKING specified.  Putting into queue to be opened asynchronously!
+[LOG] SystemI::createSound                     :     setdata soundi = 000000007A2A8248 : node = 00000000555062E0
+[LOG] SystemI::createSound                     :     add node to async list : head = 00000000255A5D28.  list count = 5
+[LOG] SystemI::createSoundInternal             :     Stream 0/1: name='Player3_1', format=2, channels=2, frequency=48000, lengthbytes=1085472, lengthpcm=6081027, pcmblocksize=0, loopstart=0, loopend=0, mode=0x00000000, channelmask=0x00000000, channelorder=0, peakvolume=0.090607.
+[LOG] Thread::initThread                       :     Init FMOD file thread. Priority: 1, Stack Size: 16384, Semaphore: No, Sleep Time: 10, Looping: Yes.
+[LOG] AsyncThread::threadFunc                  : Finished Asynchronous operation on sound 000000007A2A79D8
+[LOG] AsyncThread::threadFunc                  : Starting Asynchronous operation on sound 000000007A2A7B88
+[LOG] SystemI::createSoundInternal             :     Create name='Assets\GameJam2019FMODProject\Build\Desktop/Master Bank.bank', mode=0x02010082
+[LOG] SystemI::createSoundInternal             :     exinfo->cbsize             = 232
+[LOG] SystemI::createSoundInternal             :     exinfo->length             = 9391360
+[LOG] SystemI::createSoundInternal             :     exinfo->fileoffset         = 25376
+[LOG] SystemI::createSoundInternal             :     exinfo->numsubsounds       = 1
+[LOG] SystemI::createSoundInternal             :     exinfo->inclusionlist      = 0000000070E37FA8
+[LOG] SystemI::createSoundInternal             :     exinfo->inclusionlistnum   = 1
+[LOG] SystemI::createSoundInternal             :     exinfo->suggestedsoundtype = 5
+[LOG] SystemI::createSoundInternal             :     exinfo->initialseekpostype = 1
+[LOG] SystemI::createSoundInternal             :     Stream 0/1: name='Player1_1', format=2, channels=2, frequency=48000, lengthbytes=1133952, lengthpcm=6133968, pcmblocksize=0, loopstart=0, loopend=0, mode=0x00000000, channelmask=0x00000000, channelorder=0, peakvolume=0.408813.
+[LOG] AsyncThread::threadFunc                  : Finished Asynchronous operation on sound 000000007A2A7B88
+[LOG] AsyncThread::threadFunc                  : Starting Asynchronous operation on sound 000000007A2A7D38
+[LOG] SystemI::createSoundInternal             :     Create name='Assets\GameJam2019FMODProject\Build\Desktop/Master Bank.bank', mode=0x02010082
+[LOG] SystemI::createSoundInternal             :     exinfo->cbsize             = 232
+[LOG] SystemI::createSoundInternal             :     exinfo->length             = 9391360
+[LOG] SystemI::createSoundInternal             :     exinfo->fileoffset         = 25376
+[LOG] SystemI::createSoundInternal             :     exinfo->numsubsounds       = 1
+[LOG] SystemI::createSoundInternal             :     exinfo->inclusionlist      = 0000000070E380F8
+[LOG] SystemI::createSoundInternal             :     exinfo->inclusionlistnum   = 1
+[LOG] SystemI::createSoundInternal             :     exinfo->suggestedsoundtype = 5
+[LOG] SystemI::createSoundInternal             :     exinfo->initialseekpostype = 1
+[LOG] SystemI::createSoundInternal             :     Stream 0/1: name='baix', format=2, channels=2, frequency=48000, lengthbytes=1242528, lengthpcm=6070439, pcmblocksize=0, loopstart=0, loopend=0, mode=0x00000000, channelmask=0x00000000, channelorder=0, peakvolume=0.550262.
+[LOG] AsyncThread::threadFunc                  : Finished Asynchronous operation on sound 000000007A2A7D38
+[LOG] AsyncThread::threadFunc                  : Starting Asynchronous operation on sound 000000007A2A8098
+[LOG] SystemI::createSoundInternal             :     Create name='Assets\GameJam2019FMODProject\Build\Desktop/Master Bank.bank', mode=0x02010082
+[LOG] SystemI::createSoundInternal             :     exinfo->cbsize             = 232
+[LOG] SystemI::createSoundInternal             :     exinfo->length             = 9391360
+[LOG] SystemI::createSoundInternal             :     exinfo->fileoffset         = 25376
+[LOG] SystemI::createSoundInternal             :     exinfo->numsubsounds       = 1
+[LOG] SystemI::createSoundInternal             :     exinfo->inclusionlist      = 0000000071226B78
+[LOG] SystemI::createSoundInternal             :     exinfo->inclusionlistnum   = 1
+[LOG] SystemI::createSoundInternal             :     exinfo->suggestedsoundtype = 5
+[LOG] SystemI::createSoundInternal             :     exinfo->initialseekposition = 29
+[LOG] SystemI::createSoundInternal             :     exinfo->initialseekpostype = 1
+[LOG] SystemI::createSoundInternal             :     Stream 0/1: name='Player2_2', format=2, channels=2, frequency=48000, lengthbytes=1491840, lengthpcm=6039928, pcmblocksize=0, loopstart=0, loopend=0, mode=0x00000000, channelmask=0x00000000, channelorder=0, peakvolume=0.431458.
+[LOG] AsyncThread::threadFunc                  : Finished Asynchronous operation on sound 000000007A2A8098
+[LOG] AsyncThread::threadFunc                  : Starting Asynchronous operation on sound 000000007A2A9178
+[LOG] SystemI::createSoundInternal             :     Create name='Assets\GameJam2019FMODProject\Build\Desktop/Master Bank.bank', mode=0x02010082
+[LOG] SystemI::createSoundInternal             :     exinfo->cbsize             = 232
+[LOG] SystemI::createSoundInternal             :     exinfo->length             = 9391360
+[LOG] SystemI::createSoundInternal             :     exinfo->fileoffset         = 25376
+[LOG] SystemI::createSoundInternal             :     exinfo->numsubsounds       = 1
+[LOG] SystemI::createSoundInternal             :     exinfo->inclusionlist      = 0000000071226CC8
+[LOG] SystemI::createSoundInternal             :     exinfo->inclusionlistnum   = 1
+[LOG] SystemI::createSoundInternal             :     exinfo->suggestedsoundtype = 5
+[LOG] SystemI::createSoundInternal             :     exinfo->initialseekposition = 29
+[LOG] SystemI::createSoundInternal             :     exinfo->initialseekpostype = 1
+[LOG] SystemI::createSoundInternal             :     Stream 0/1: name='Player2_1', format=2, channels=2, frequency=48000, lengthbytes=1431648, lengthpcm=5814648, pcmblocksize=0, loopstart=0, loopend=0, mode=0x00000000, channelmask=0x00000000, channelorder=0, peakvolume=0.213104.
+[LOG] AsyncThread::threadFunc                  : Finished Asynchronous operation on sound 000000007A2A9178
+[LOG] AsyncThread::threadFunc                  : Starting Asynchronous operation on sound 000000007A2A8AB8
+[LOG] SystemI::createSoundInternal             :     Create name='Assets\GameJam2019FMODProject\Build\Desktop/Master Bank.bank', mode=0x02010082
+[LOG] SystemI::createSoundInternal             :     exinfo->cbsize             = 232
+[LOG] SystemI::createSoundInternal             :     exinfo->length             = 9391360
+[LOG] SystemI::createSoundInternal             :     exinfo->fileoffset         = 25376
+[LOG] SystemI::createSoundInternal             :     exinfo->numsubsounds       = 1
+[LOG] SystemI::createSoundInternal             :     exinfo->inclusionlist      = 0000000071226E18
+[LOG] SystemI::createSoundInternal             :     exinfo->inclusionlistnum   = 1
+[LOG] SystemI::createSoundInternal             :     exinfo->suggestedsoundtype = 5
+[LOG] SystemI::createSoundInternal             :     exinfo->initialseekposition = 29
+[LOG] SystemI::createSoundInternal             :     exinfo->initialseekpostype = 1
+[LOG] SystemI::createSoundInternal             :     Stream 0/1: name='Player3_2', format=2, channels=2, frequency=48000, lengthbytes=1323360, lengthpcm=6054278, pcmblocksize=0, loopstart=0, loopend=0, mode=0x00000000, channelmask=0x00000000, channelorder=0, peakvolume=0.378265.
+[LOG] AsyncThread::threadFunc                  : Finished Asynchronous operation on sound 000000007A2A8AB8
+[LOG] AsyncThread::threadFunc                  : Starting Asynchronous operation on sound 000000007A2A8248
+[LOG] SystemI::createSoundInternal             :     Create name='Assets\GameJam2019FMODProject\Build\Desktop/Master Bank.bank', mode=0x02010082
+[LOG] SystemI::createSoundInternal             :     exinfo->cbsize             = 232
+[LOG] SystemI::createSoundInternal             :     exinfo->length             = 9391360
+[LOG] SystemI::createSoundInternal             :     exinfo->fileoffset         = 25376
+[LOG] SystemI::createSoundInternal             :     exinfo->numsubsounds       = 1
+[LOG] SystemI::createSoundInternal             :     exinfo->inclusionlist      = 00000000555063F8
+[LOG] SystemI::createSoundInternal             :     exinfo->inclusionlistnum   = 1
+[LOG] SystemI::createSoundInternal             :     exinfo->suggestedsoundtype = 5
+[LOG] SystemI::createSoundInternal             :     exinfo->initialseekposition = 29
+[LOG] SystemI::createSoundInternal             :     exinfo->initialseekpostype = 1
+[LOG] SystemI::createSoundInternal             :     Stream 0/1: name='Player1_2', format=2, channels=2, frequency=48000, lengthbytes=1412736, lengthpcm=6103875, pcmblocksize=0, loopstart=0, loopend=0, mode=0x00000000, channelmask=0x00000000, channelorder=0, peakvolume=0.755402.
+[LOG] AsyncThread::threadFunc                  : Finished Asynchronous operation on sound 000000007A2A8248
+[LOG] SoundI::getSubSound                      : sound 000000007A2A79D8.  Subsound index 0 / 1
+[LOG] SoundI::getSubSound                      : sound 000000007A2A7B88.  Subsound index 0 / 1
+[LOG] SoundI::getSubSound                      : sound 000000007A2A7D38.  Subsound index 0 / 1
+[LOG] SoundI::getSubSound                      : sound 000000007A2A8098.  Subsound index 0 / 1
+[LOG] SoundI::getSubSound                      : sound 000000007A2A9178.  Subsound index 0 / 1
+[LOG] SoundI::getSubSound                      : sound 000000007A2A8AB8.  Subsound index 0 / 1
+[LOG] SoundI::getSubSound                      : sound 000000007A2A8248.  Subsound index 0 / 1
+[LOG] SoundI::release                          : Player2_1 (000000007A2A9178)
+[LOG] SoundI::release                          :     Player2_1 (000000003F9D6768)
+[LOG] SoundI::release                          :     Player2_1 (000000007A2A8908)
+[LOG] SoundI::release                          : Player3_1 (000000007A2A79D8)
+[LOG] SoundI::release                          :     Player3_1 (00000000255A5D78)
+[LOG] SoundI::release                          :     Player3_1 (000000007A2A94D8)
+[LOG] SoundI::release                          : Player2_2 (000000007A2A8098)
+[LOG] SoundI::release                          :     Player2_2 (000000003F9D5F48)
+[LOG] SoundI::release                          :     Player2_2 (000000007A2A9688)
+[LOG] SoundI::release                          : Player3_2 (000000007A2A8AB8)
+[LOG] SoundI::release                          :     Player3_2 (000000003F9D72C8)
+[LOG] SoundI::release                          :     Player3_2 (000000003FA47B78)
+[LOG] SoundI::release                          : Player1_2 (000000007A2A8248)
+[LOG] SoundI::release                          :     Player1_2 (00000000252DD228)
+[LOG] SoundI::release                          :     Player1_2 (000000003FA47D28)
+[LOG] SoundI::release                          : Player1_1 (000000007A2A7B88)
+[LOG] SoundI::release                          :     Player1_1 (00000000255A6258)
+[LOG] SoundI::release                          :     Player1_1 (000000007A2A8758)
+[LOG] SoundI::release                          : baix (000000007A2A7D38)
+[LOG] SoundI::release                          :     baix (000000003F9D5DA8)
+[LOG] SoundI::release                          :     baix (000000007A2A83F8)
+[LOG] Thread::callback                         : FMOD Studio bank load thread finished.
+[LOG] Thread::callback                         : FMOD Studio sample load thread finished.
+[LOG] LiveUpdate::release                      : 
+[LOG] LiveUpdate::reset                        : Reset connection (reason Disconnected)
+[LOG] Thread::callback                         : FMOD stream thread finished.
+[LOG] Thread::callback                         : FMOD mixer thread finished.
+[LOG] SystemI::close                           : Closed.
+[LOG] SoundI::release                          :  (000000007CFC5358)
+[LOG] SoundI::release                          :     drums2 (00000000793D4A48)
+[LOG] SoundI::release                          :  (000000007CFC54C8)
+[LOG] SoundI::release                          :     drums3 (00000000793D4D88)
+[LOG] SoundI::release                          :  (000000007CFC6608)
+[LOG] SoundI::release                          :     drums (00000000793D4BE8)
+[LOG] SoundI::release                          :  (000000007CFC6498)
+[LOG] SoundI::release                          :     intro rave (00000000793D4228)
 [LOG] Thread::callback                         : FMOD Studio update thread finished.
 [LOG] Thread::callback                         : FMOD Studio bank load thread finished.
 [LOG] Profile::disconnectAll                   : Profiler disconnecting all clients
@@ -33,18 +192,6 @@
 [LOG] Thread::callback                         : FMOD stream thread finished.
 [LOG] Thread::callback                         : FMOD mixer thread finished.
 [LOG] Profile::disconnectAll                   : Profiler disconnecting all clients
-[LOG] SystemI::close                           : Closed.
-[LOG] Manager::readBank                        : fileversion = 103, compatVersion = 99 (oldest = 44, newest = 103)
-[LOG] Manager::readBank                        : fileversion = 103, compatVersion = 99 (oldest = 44, newest = 103)
-[LOG] Manager::readBank                        : fileversion = 103, compatVersion = 99 (oldest = 44, newest = 103)
-[LOG] Manager::readBank                        : fileversion = 103, compatVersion = 99 (oldest = 44, newest = 103)
-[LOG] Manager::readBank                        : fileversion = 103, compatVersion = 99 (oldest = 44, newest = 103)
-[LOG] Manager::readBank                        : fileversion = 103, compatVersion = 99 (oldest = 44, newest = 103)
-[LOG] PlaybackSystem::acquireMasterBus         : Setting master channel group format to 6
-[LOG] Thread::callback                         : FMOD Studio bank load thread finished.
-[LOG] Thread::callback                         : FMOD Studio sample load thread finished.
-[LOG] LiveUpdate::release                      : 
-[LOG] LiveUpdate::reset                        : Reset connection (reason Disconnected)
-[LOG] Thread::callback                         : FMOD stream thread finished.
-[LOG] Thread::callback                         : FMOD mixer thread finished.
+[LOG] Thread::callback                         : FMOD nonblocking thread (0) finished.
+[LOG] Thread::callback                         : FMOD file thread finished.
 [LOG] SystemI::close                           : Closed.

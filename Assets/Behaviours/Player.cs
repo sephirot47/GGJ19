@@ -193,11 +193,9 @@ public class Player : MonoBehaviour
         animator.SetBool("Grabbing", (grabbedObject != null));
     }
 
-    public void SetPlayerColor(Color color)
+    public static void SetPlayerColorStatic(GameObject playerGo, Color color)
     {
-        playerColor = color;
-
-        foreach (SkinnedMeshRenderer mr in GetComponentsInChildren<SkinnedMeshRenderer>())
+        foreach (SkinnedMeshRenderer mr in playerGo.GetComponentsInChildren<SkinnedMeshRenderer>())
         {
             if (mr.gameObject.name == "Bottoms" || mr.gameObject.name == "Hats" ||
                 mr.gameObject.name == "Shoes" || mr.gameObject.name == "Tops")
@@ -210,6 +208,12 @@ public class Player : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void SetPlayerColor(Color color)
+    {
+        playerColor = color;
+        SetPlayerColorStatic(gameObject, color);
     }
     
     public void OnHit(GameObject other)
