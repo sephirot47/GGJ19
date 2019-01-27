@@ -45,6 +45,7 @@ public class Core : MonoBehaviour
     [FMODUnity.EventRef]
     public string FMODGeneralEventRef;
     FMOD.Studio.EventInstance FMODGeneralEvent;
+    
 
     void Start()
     {
@@ -52,14 +53,17 @@ public class Core : MonoBehaviour
 
         objectsInTruck = new List<GameObject>();
         state = State.INTRO;
-        
-        FMODGeneralEvent = FMODUnity.RuntimeManager.CreateInstance(FMODGeneralEventRef);
-        FMODGeneralEvent.setParameterValue("Player1", 0.0f);
-        FMODGeneralEvent.setParameterValue("Player2", 0.0f);
-        FMODGeneralEvent.setParameterValue("Player3", 0.0f);
-        FMODGeneralEvent.setParameterValue("Empat", 1.0f);
-        FMODGeneralEvent.setParameterValue("Start", 0.0f);
-        FMODGeneralEvent.start();
+
+        // if (!FMODStarted)
+        {
+            FMODGeneralEvent = FMODUnity.RuntimeManager.CreateInstance(FMODGeneralEventRef);
+            FMODGeneralEvent.setParameterValue("Player1", 0.0f);
+            FMODGeneralEvent.setParameterValue("Player2", 0.0f);
+            FMODGeneralEvent.setParameterValue("Player3", 0.0f);
+            FMODGeneralEvent.setParameterValue("Empat", 1.0f);
+            FMODGeneralEvent.setParameterValue("Start", 0.0f);
+            FMODGeneralEvent.start();
+        }
 
         roofMaterial.SetColor("_Color", Color.black);
 
