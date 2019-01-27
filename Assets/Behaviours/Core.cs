@@ -53,7 +53,14 @@ public class Core : MonoBehaviour
         objectsInTruck = new List<GameObject>();
         state = State.INTRO;
         
-        FMODGeneralEvent = FMODUnity.RuntimeManager.CreateInstance(FMODGeneralEventRef); 
+        FMODGeneralEvent = FMODUnity.RuntimeManager.CreateInstance(FMODGeneralEventRef);
+        FMODGeneralEvent.setParameterValue("Player1", 0.0f);
+        FMODGeneralEvent.setParameterValue("Player2", 0.0f);
+        FMODGeneralEvent.setParameterValue("Player3", 0.0f);
+        FMODGeneralEvent.setParameterValue("Empat", 1.0f);
+        FMODGeneralEvent.setParameterValue("Start", 0.0f);
+        FMODGeneralEvent.start();
+
         roofMaterial.SetColor("_Color", Color.black);
 
         scores = new Dictionary<PlayerId, int>();
@@ -91,8 +98,7 @@ public class Core : MonoBehaviour
         if (state == State.INTRO)
         {
             UpdateCountDownText(roundTime);
-            FMODGeneralEvent.setParameterValue("Start", 1.0f);
-            FMODGeneralEvent.start();
+            FMODGeneralEvent.setParameterValue("Start", 0.0f);
         }
         else if (state == State.PLAYING)
         {
@@ -112,9 +118,23 @@ public class Core : MonoBehaviour
                 mumPlayerWinWeight += (scores[PlayerId.MUM] > scores[PlayerId.CHILD]) ? 1.0f : 0.0f;
                 childPlayerWinWeight += (scores[PlayerId.CHILD] > scores[PlayerId.DAD]) ? 1.0f : 0.0f;
                 childPlayerWinWeight += (scores[PlayerId.CHILD] > scores[PlayerId.MUM]) ? 1.0f : 0.0f;
-                FMODGeneralEvent.setParameterValue("Player1", dadPlayerWinWeight);
-                FMODGeneralEvent.setParameterValue("Player2", mumPlayerWinWeight);
-                FMODGeneralEvent.setParameterValue("Player3", childPlayerWinWeight);
+
+                if (dadPlayerWinWeight == mumPlayerWinWeight &&
+                    mumPlayerWinWeight == childPlayerWinWeight)
+                {
+                    FMODGeneralEvent.setParameterValue("Player1", 0.0f);
+                    FMODGeneralEvent.setParameterValue("Player2", 0.0f);
+                    FMODGeneralEvent.setParameterValue("Player3", 0.0f);
+                    FMODGeneralEvent.setParameterValue("Empat", 1.0f);
+                    FMODGeneralEvent.setParameterValue("Start", 1.0f);
+                }
+                else
+                {
+                    FMODGeneralEvent.setParameterValue("Player1", dadPlayerWinWeight);
+                    FMODGeneralEvent.setParameterValue("Player2", mumPlayerWinWeight);
+                    FMODGeneralEvent.setParameterValue("Player3", childPlayerWinWeight);
+                    FMODGeneralEvent.setParameterValue("Empat", 0.0f);
+                }
                 FMODGeneralEvent.setParameterValue("Start", 1.0f);
             }
 
@@ -141,6 +161,7 @@ public class Core : MonoBehaviour
             {
                 state = State.ENDING;
                 endingTimeBegin = Time.time;
+                FMODGeneralEvent.setParameterValue("Start", 0.0f);
                 FindObjectOfType<TruckAnimationController>().GetComponentInChildren<Animation>().Play("OpenRear");
             }
         }

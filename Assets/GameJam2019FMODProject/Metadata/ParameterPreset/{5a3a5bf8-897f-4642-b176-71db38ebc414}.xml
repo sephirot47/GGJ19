@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.01.10.00">
+    <object class="ParameterPreset" id="{5a3a5bf8-897f-4642-b176-71db38ebc414}">
+        <property name="name">
+            <value>Empat</value>
+        </property>
+        <relationship name="folder">
+            <destination>{223cec03-1b47-4bb7-b745-72e1afb97b41}</destination>
+        </relationship>
+        <relationship name="parameter">
+            <destination>{4ed5811b-d791-4947-ae76-b9ca8f42bbd3}</destination>
+        </relationship>
+    </object>
+    <object class="GameParameter" id="{4ed5811b-d791-4947-ae76-b9ca8f42bbd3}">
+        <property name="initialValue">
+            <value>0</value>
+        </property>
+    </object>
+</objects>

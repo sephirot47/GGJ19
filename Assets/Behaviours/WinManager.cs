@@ -39,7 +39,7 @@ public class WinManager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            SceneManager.LoadScene("Menu");
+            SceneManager.LoadScene("Game");
         }
     }
 }

@@ -62,9 +62,11 @@ public class GrabbableObject : MonoBehaviour
 
         if (Time.time - timeStartedToBeThrown >= 3.0f && grabber)
         {
-            Physics.IgnoreCollision(GetComponentInChildren<Collider>(),
-                                    grabber.GetComponentInChildren<CapsuleCollider>(),
-                                    false);
+            foreach (Collider grabberCol in grabber.GetComponentsInChildren<Collider>())
+            {
+                Physics.IgnoreCollision(GetComponentInChildren<Collider>(),
+                                        grabberCol, false);
+            }
         }
 
         switch (state)
@@ -152,17 +154,22 @@ public class GrabbableObject : MonoBehaviour
     public void SetGrabbed(bool grabbed)
     {
         state = (grabbed ? State.GRABBED : State.BEING_THROWN);
-        if (!grabbed)
+
+        if (state == State.BEING_THROWN)
         {
             timeStartedToBeThrown = Time.time;
         }
 
-        if (state == State.BEING_THROWN && grabber)
+        if (state == State.BEING_THROWN)
         {
-            timeStartedToBeThrown = Time.time;
-            Physics.IgnoreCollision(GetComponentInChildren<Collider>(),
-                                    grabber.GetComponentInChildren<CapsuleCollider>(),
-                                    true);
+            if (grabber)
+            {
+                foreach (Collider grabberCol in grabber.GetComponentsInChildren<Collider>())
+                {
+                    Physics.IgnoreCollision(GetComponentInChildren<Collider>(),
+                                            grabberCol, true);
+                }
+            }
         }
 
         rb.isKinematic = grabbed;

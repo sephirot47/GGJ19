@@ -1096,7 +1096,7 @@ MonoBehaviour:
   - Name: Start
     Value: 1
   - Name: Player1
-    Value: 2
+    Value: 0
   OverrideAttenuation: 0
   OverrideMinDistance: 0
   OverrideMaxDistance: 0
@@ -4070,7 +4070,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  roundTime: 60
+  roundTime: 120
   maxShuffleTime: 7
   maxShowControlsTime: 7
   roofMaterial: {fileID: 2100000, guid: e28045296e59f4d7c98e431e15e52f7b, type: 2}
