@@ -34,6 +34,7 @@ public class Player : MonoBehaviour
     public AnimationCurve speedVsDotCurve;
     public PlayerId playerId;
     private Color playerColor;
+    private float timeUntilGotUp;
     
     private Animator animator;
     private CharacterController cc;
@@ -43,9 +44,9 @@ public class Player : MonoBehaviour
     private GrabbableObject grabbedObject = null;
     private Vector3 throwDir = Vector3.zero;
 
-    public List<GameObject> grabbableObjectsPrefabsBig;
-    public List<GameObject> grabbableObjectsPrefabsMedium;
-    public List<GameObject> grabbableObjectsPrefabsSmall;
+    private List<GameObject> grabbableObjectsPrefabsBig;
+    private List<GameObject> grabbableObjectsPrefabsMedium;
+    private List<GameObject> grabbableObjectsPrefabsSmall;
 
     void Start()
     {
@@ -80,6 +81,11 @@ public class Player : MonoBehaviour
             cc.SimpleMove(Vector3.zero);
             animator.SetFloat("Velocity", 0.0f);
             animator.SetBool("Grabbing", false);
+            return;
+        }
+
+        if (IsFallenDown())
+        {
             return;
         }
 
@@ -205,6 +211,30 @@ public class Player : MonoBehaviour
             }
         }
     }
+    
+    public void OnHit(GameObject other)
+    {
+        GrabbableObject gObj = other.GetComponentInChildren<GrabbableObject>();
+        if (gObj && gObj.grabber != this)
+        {
+            if (gObj.state == GrabbableObject.State.BEING_THROWN && !IsFallenDown())
+            {
+                animator.SetTrigger("FallDown");
+                ReleaseGrabbedObject();
+                timeUntilGotUp = (Time.time + 2.0f);
+            }
+        }
+    }
+
+    public bool IsFallenDown()
+    {
+        return Time.time < timeUntilGotUp;
+    }
+
+    public void OnCollisionEnter(Collision collision)
+    {
+        OnHit(collision.gameObject);
+    }
 
     bool CanWalk()
     {
@@ -246,6 +276,7 @@ public class Player : MonoBehaviour
     void GrabObject(GrabbableObject grabbableObject)
     {
         grabbedObject = grabbableObject;
+        grabbedObject.SetGrabber(this);
         grabbedObject.SetGrabbed(true);
 
         grabbedObject.transform.SetParent(grabSocket.transform);

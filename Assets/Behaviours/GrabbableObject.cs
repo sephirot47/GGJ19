@@ -10,7 +10,8 @@ public class GrabbableObject : MonoBehaviour
     };
 
     private Rigidbody rb;
-    Player owner;
+    public Player owner;
+    public Player grabber;
     private float timeStartedToBeThrown = 0.0f;
     private int objectSize = 0;
     private PlayerId playerOwnerId = PlayerId.CHILD;
@@ -54,12 +55,16 @@ public class GrabbableObject : MonoBehaviour
                 if (Time.time - timeStartedToBeThrown >= 1.0f)
                 {
                     state = State.IDLE;
-                    Physics.IgnoreCollision(GetComponentInChildren<Collider>(),
-                                            owner.GetComponentInChildren<Collider>(),
-                                            false);
 
                 }
                 break;
+        }
+
+        if (Time.time - timeStartedToBeThrown >= 3.0f)
+        {
+            Physics.IgnoreCollision(GetComponentInChildren<Collider>(),
+                                    grabber.GetComponentInChildren<Collider>(),
+                                    false);
         }
 
         switch (state)
@@ -99,6 +104,11 @@ public class GrabbableObject : MonoBehaviour
         }
     }
 
+    public void SetGrabber(Player grabber_)
+    {
+        grabber = grabber_;
+    }
+
     private static Vector3 Planar(Vector3 v)
     {
         return new Vector3(v.x, 0, v.z);
@@ -107,7 +117,7 @@ public class GrabbableObject : MonoBehaviour
     {
         return Planar(v).normalized;
     }
-    
+
     public void SetSize(int size)
     {
         objectSize = size;
@@ -151,7 +161,7 @@ public class GrabbableObject : MonoBehaviour
         {
             timeStartedToBeThrown = Time.time;
             Physics.IgnoreCollision(GetComponentInChildren<Collider>(),
-                                    owner.GetComponentInChildren<Collider>(),
+                                    grabber.GetComponentInChildren<Collider>(),
                                     true);
         }
 
