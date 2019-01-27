@@ -33,8 +33,8 @@ public class Player : MonoBehaviour
     public float rotSpeed = 100.0f;
     public AnimationCurve speedVsDotCurve;
     public PlayerId playerId;
-
-    private int nextSizeOfObjectToPick;
+    private Color playerColor;
+    
     private Animator animator;
     private CharacterController cc;
     private GameObject handSocket;
@@ -53,7 +53,11 @@ public class Player : MonoBehaviour
         handSocket = gameObject.transform.FindDeepChild("HandSocket").gameObject;
         grabSocket = gameObject.transform.FindDeepChild("GrabSocket").gameObject;
         SetIsInsideParking(false);
-        
+
+        if (playerId == PlayerId.CHILD) SetPlayerColor(Core.childColor);
+        else if (playerId == PlayerId.DAD) SetPlayerColor(Core.dadColor);
+        else if (playerId == PlayerId.MUM) SetPlayerColor(Core.mumColor);
+
         grabbableObjectsPrefabsBig = new List<GameObject>();
         grabbableObjectsPrefabsMedium = new List<GameObject>();
         grabbableObjectsPrefabsSmall = new List<GameObject>();
@@ -68,10 +72,13 @@ public class Player : MonoBehaviour
     {
         if (Core.core.GetState() != Core.State.PLAYING)
         {
+            cc.SimpleMove(Vector3.zero);
             animator.SetFloat("Velocity", 0.0f);
             animator.SetBool("Grabbing", false);
             return;
         }
+
+        transform.Find("KeysQuad").gameObject.active = false;
 
         float axisX = Input.GetAxis("Horizontal" + playerId.ToString());
         float axisZ = Input.GetAxis("Vertical" + playerId.ToString());
@@ -116,23 +123,18 @@ public class Player : MonoBehaviour
                     ReleaseGrabbedObject();
                 }
 
+                int sizeOfObjectToPick = Random.Range(1, 4);
                 GameObject prefab = null;
-                List<GameObject> prefabList = (nextSizeOfObjectToPick == 1 ?
-                    grabbableObjectsPrefabsSmall : nextSizeOfObjectToPick == 2 ?
+                List<GameObject> prefabList = (sizeOfObjectToPick == 1 ?
+                    grabbableObjectsPrefabsSmall : sizeOfObjectToPick == 2 ?
                     grabbableObjectsPrefabsMedium : grabbableObjectsPrefabsBig);
                 prefab = prefabList[ Random.Range(0, prefabList.Count) ];
                 
                 GameObject newGrabbableObjectGo = GameObject.Instantiate<GameObject>(prefab);
                 GrabbableObject newGrabbableObject = newGrabbableObjectGo.GetComponent<GrabbableObject>();
                 GrabObject(newGrabbableObject);
-                newGrabbableObject.SetOwner(playerId);
-                newGrabbableObject.SetSize(nextSizeOfObjectToPick);
-               
-                nextSizeOfObjectToPick++;
-                if (nextSizeOfObjectToPick >= 4)
-                {
-                    nextSizeOfObjectToPick = 1;
-                }
+                newGrabbableObject.SetOwner(playerId, playerColor);
+                newGrabbableObject.SetSize(sizeOfObjectToPick);
             }
         }
         else
@@ -179,6 +181,25 @@ public class Player : MonoBehaviour
         animator.SetBool("Grabbing", (grabbedObject != null));
     }
 
+    public void SetPlayerColor(Color color)
+    {
+        playerColor = color;
+
+        foreach (SkinnedMeshRenderer mr in GetComponentsInChildren<SkinnedMeshRenderer>())
+        {
+            if (mr.gameObject.name == "Bottoms" || mr.gameObject.name == "Hats" ||
+                mr.gameObject.name == "Shoes" || mr.gameObject.name == "Tops")
+            {
+                List<Material> materials = new List<Material>();
+                mr.GetMaterials(materials);
+                foreach (Material mat in materials)
+                {
+                    mat.SetColor("_Color", color);
+                }
+            }
+        }
+    }
+
     bool CanWalk()
     {
         bool canWalk = true;
@@ -200,6 +221,11 @@ public class Player : MonoBehaviour
     private static Vector3 PlanarNorm(Vector3 v)
     {
         return Planar(v).normalized;
+    }
+
+    public Color GetPlayerColor()
+    {
+        return playerColor;
     }
     
     float GetWeightSpeedFactor()
@@ -237,18 +263,13 @@ public class Player : MonoBehaviour
 
     public void SetIsInsideParking(bool insideParking)
     {
-        bool hasChanged = (isInsideParking != insideParking);
-
         isInsideParking = insideParking;
 
         Outline outline = GetComponent<Outline>();
         if (isInsideParking)
         {
             outline.enabled = true;
-            if (hasChanged)
-            {
-                nextSizeOfObjectToPick = 1;
-            }
+            outline.OutlineColor = GetPlayerColor();
         }
         else
         {

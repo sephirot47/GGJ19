@@ -31,7 +31,10 @@ public class GrabbableObject : MonoBehaviour
                 break;
 
             case State.GRABBED:
-                GetComponentInChildren<Collider>().enabled = false;
+                if (GetComponentInChildren<Collider>())
+                {
+                    GetComponentInChildren<Collider>().enabled = false;
+                }
                 break;
 
             case State.BEING_THROWN:
@@ -46,7 +49,10 @@ public class GrabbableObject : MonoBehaviour
         {
             case State.IDLE:
             case State.BEING_THROWN:
-                GetComponentInChildren<Collider>().enabled = true;
+                if (GetComponentInChildren<Collider>())
+                {
+                    GetComponentInChildren<Collider>().enabled = true;
+                }
                 break;
         }
 
@@ -66,8 +72,7 @@ public class GrabbableObject : MonoBehaviour
         Outline outline = GetComponentInChildren<Outline>();
         if (maxGrabPlayer && state == State.IDLE)
         {
-            Color outlineColor = (maxGrabPlayer.playerId == PlayerId.CHILD ? Color.blue :
-                maxGrabPlayer.playerId == PlayerId.DAD ? new Color(1.0f, 0.4f, 0.0f) : Color.magenta);
+            Color outlineColor = maxGrabPlayer.GetPlayerColor();
             outline.OutlineColor = outlineColor;
             outline.enabled = true;
         }
@@ -110,9 +115,19 @@ public class GrabbableObject : MonoBehaviour
         */
     }
 
-    public void SetOwner(PlayerId playerOwnerId_)
+    public void SetOwner(PlayerId playerOwnerId_, Color ownerColor)
     {
         playerOwnerId = playerOwnerId_;
+
+        foreach (MeshRenderer mr in GetComponentsInChildren<MeshRenderer>())
+        {
+            List<Material> materials = new List<Material>();
+            mr.GetMaterials(materials);
+            foreach (Material mat in materials)
+            {
+                mat.SetColor("_Color", ownerColor);
+            }
+        }
     }
 
     public PlayerId GetOwner()
@@ -146,6 +161,7 @@ public class GrabbableObject : MonoBehaviour
         {
             return -999999.9f;
         }
+
 
         float closenessHeuristic = (1.0f / dist) * dot;
         return closenessHeuristic;

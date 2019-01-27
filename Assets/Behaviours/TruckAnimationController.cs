@@ -18,12 +18,12 @@ public class TruckAnimationController : MonoBehaviour
     public void OpenTruck()
     {
         Animation anim = GetComponentInChildren<Animation>();
-        anim.Play("Close");
+        anim.Play("CloseRear");
     }
 
     public void CloseTruck()
     {
         Animation anim = GetComponentInChildren<Animation>();
-        anim.Play("Open");
+        anim.Play("OpenRear");
     }
 }

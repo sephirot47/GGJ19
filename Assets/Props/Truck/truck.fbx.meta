@@ -59,7 +59,6 @@ ModelImporter:
     4300012: Wheels
     4300014: TruckBase
     4300016: Truck
-    11100000: //RootNode
   externalObjects:
   - first:
       type: UnityEngine:Material
@@ -145,7 +144,7 @@ ModelImporter:
     hasExtraRoot: 0
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
-  animationType: 1
+  animationType: 0
   humanoidOversampling: 1
   additionalBone: 0
   userData: 

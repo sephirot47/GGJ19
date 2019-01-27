@@ -15,7 +15,7 @@ public class Core : MonoBehaviour
         ENDING
     };
 
-    public TextMeshProUGUI countdownText;
+    public TextMeshProUGUI remainingPlayTimeText;
     public TruckTrigger truckTrigger;
     public AnimationCurve truckLeaveSpeed;
     Dictionary<PlayerId, int> scores;
@@ -27,6 +27,7 @@ public class Core : MonoBehaviour
     public float maxShuffleTime;
     float shuffleTimeCounter = 0.0f;
 
+    private List<GameObject> objectsInTruck;
     private float showControlsTimeBegin;
     public float maxShowControlsTime;
     private float endingTimeBegin;
@@ -34,11 +35,16 @@ public class Core : MonoBehaviour
     public static Core core;
     public GameObject mum, dad, child;
     public static PlayerId winnerPlayerId = PlayerId.CHILD;
+    public static Color dadColor = Color.black;
+    public static Color mumColor = Color.black;
+    public static Color childColor = Color.black;
 
     void Start()
     {
         Core.core = this;
 
+        objectsInTruck = new List<GameObject>();
+        
         scores = new Dictionary<PlayerId, int>();
         scores[PlayerId.CHILD] = 0;
         scores[PlayerId.DAD] = 0;
@@ -51,7 +57,20 @@ public class Core : MonoBehaviour
         int minutes = (int)(remainingTimeSecs / 60) % 60;
         string secondsStr = (seconds >= 10 ? "" : "0") + (seconds.ToString());
         string minutesStr = (minutes >= 10 ? "" : "0") + (minutes.ToString());
-        countdownText.SetText(minutesStr + ":" + secondsStr);
+        remainingPlayTimeText.SetText(minutesStr + ":" + secondsStr);
+
+        if (remainingTimeSecs < 10)
+        {
+            remainingPlayTimeText.faceColor = Color.red;
+            remainingPlayTimeText.outlineColor = Color.white;
+            remainingPlayTimeText.fontSize = 80;
+        }
+        else if (remainingTimeSecs < 30)
+        {
+            remainingPlayTimeText.faceColor = Color.yellow;
+            remainingPlayTimeText.fontSize = 60;
+        }
+
     }
     
     void Update()
@@ -68,9 +87,24 @@ public class Core : MonoBehaviour
 
             if (remainingTimeSecs <= 0)
             {
+                Collider[] truckColliders = truckTrigger.gameObject.GetComponentsInChildren<Collider>();
+                foreach (Collider truckCollider in truckColliders)
+                {
+                    // truckCollider.enabled = false;
+                }
+
+
+                // foreach (GameObject goInTruck in objectsInTruck)
+                // {
+                //     Component.Destroy(goInTruck.GetComponentInChildren<Rigidbody>());
+                //     Component.Destroy(goInTruck.GetComponentInChildren<Collider>());
+                //     goInTruck.transform.parent = truckTrigger.transform.parent;
+                // }
+
+
                 state = State.ENDING;
                 endingTimeBegin = Time.time;
-                FindObjectOfType<TruckAnimationController>().GetComponentInChildren<Animation>().Play("Open");
+                FindObjectOfType<TruckAnimationController>().GetComponentInChildren<Animation>().Play("OpenRear");
             }
         }
         else if (state == State.SHUFFLING)
@@ -89,41 +123,31 @@ public class Core : MonoBehaviour
                     for (int i = 0; i < characters.Length; ++i)
                     {
                         GameObject character = characters[i];
-
-                        int j = 0;
-                        float minDistance;
-                        Color characterColor;
+                        
+                        bool keepDoing;
+                        Color characterColor = new Color(0,0,0,0);
+                        Color[] characterColors = { Color.blue, Color.red, Color.green, new Color(1.0f, 0.0f, 1.0f),
+                                                    new Color(1.0f, 0.5f, 0.0f), Color.black};
                         do
                         {
-                            minDistance = 99999.9f;
-                            characterColor = Random.ColorHSV(0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f);
+                            keepDoing = false;
+                            characterColor = characterColors[Random.Range(0, characterColors.Length)];
                             foreach (Color otherColor in generatedColors)
                             {
-                                float distance = Vector3.Distance(new Vector3(otherColor.r, otherColor.g, otherColor.b),
-                                    new Vector3(characterColor.r, characterColor.g, characterColor.b));
-                                if (distance < minDistance)
+                                if (otherColor == characterColor)
                                 {
-                                    minDistance = distance;
+                                    keepDoing = true;
                                 }
                             }
                         }
-                        while (++j < 50 && minDistance < 1.0);
-                        generatedColors[i] = characterColor;
+                        while (keepDoing);
 
-                        foreach (SkinnedMeshRenderer mr in character.GetComponentsInChildren<SkinnedMeshRenderer>())
-                        {
-                            if (mr.gameObject.name == "Bottoms" || mr.gameObject.name == "Hats" ||
-                                mr.gameObject.name == "Shoes" || mr.gameObject.name == "Tops")
-                            {
-                                List<Material> materials = new List<Material>();
-                                mr.GetMaterials(materials);
-                                foreach (Material mat in materials)
-                                {
-                                    mat.SetColor("_Color", characterColor);
-                                }
-                            }
-                        }
+                        generatedColors[i] = characterColor;
+                        character.GetComponent<Player>().SetPlayerColor(characterColor);
                     }
+                    Core.mumColor = generatedColors[0];
+                    Core.dadColor = generatedColors[1];
+                    Core.childColor = generatedColors[2];
                     shuffleTimeCounter = 0.0f;
                 }
             }
@@ -141,8 +165,11 @@ public class Core : MonoBehaviour
 
             if (endingTime > 6.0f)
             {
-                float speed = truckLeaveSpeed.Evaluate((endingTime-6) / 4.0f);
-                truckTrigger.transform.parent.Translate(Vector3.right * speed * Time.deltaTime);
+                GameObject[] terrainBoundaryColliders = GameObject.FindGameObjectsWithTag("TerrainBoundaryCollider");
+                foreach (GameObject collider in terrainBoundaryColliders)
+                {
+                    collider.SetActive(false);
+                }
             }
 
             if (endingTime > 12.0f)
@@ -159,6 +186,16 @@ public class Core : MonoBehaviour
                 SceneManager.LoadScene("Win");
             }
         }
+    }
+
+    public void AddObjectInTruck(GameObject obj)
+    {
+        objectsInTruck.Add(obj);
+    }
+
+    public void RemoveObjectInTruck(GameObject obj)
+    {
+        objectsInTruck.Remove(obj);
     }
 
     public State GetState()

@@ -42,5 +42,14 @@ public class TruckTrigger : MonoBehaviour
                 core.AddToScore(ownerId, -objectSize);
             }
         }
+
+        if (enter)
+        {
+            core.AddObjectInTruck(collider.gameObject);
+        }
+        else
+        {
+            core.RemoveObjectInTruck(collider.gameObject);
+        }
     }
 }
